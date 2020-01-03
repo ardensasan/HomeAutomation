@@ -1,0 +1,77 @@
+<!doctype html>
+<?php
+include "sessions.php";
+include_once "navigator.php";
+include_once "databaseConnection.php";
+$userFullName = $_SESSION['userFullName'];
+?>
+<body>
+    <!-- content -->
+    <!-- ============================================================== -->
+    <div class="dashboard-wrapper">
+        <div class="container-fluid dashboard-content ">
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-header">Recent Actions</h5>
+                <table id="datable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Time</th>
+                                            <th class="text-center">Appliance</th>
+                                            <th class="text-center">Action</th>
+                                            <th class="text-center">Via</th>
+                                            <th class="text-center">User</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    $count = 1;
+                                    $query = "SELECT logID, DATE_FORMAT(DATE((logDateTime)),'%M %d %Y') as D, TIME_FORMAT((TIME(logDateTime)),'%h:%i %p') as T, logAppliance, logAction, logVia FROM tbl_logs ORDER BY logID DESC LIMIT 5";
+                                    $getapplianceName=$conn->prepare($query);
+                                    $getapplianceName->execute();
+                                    if($getapplianceName->rowCount() > 0)
+                                    {
+                                        $recNotif = "";
+                                    while ($applianceName = $getapplianceName->fetch(PDO::FETCH_ASSOC)) {
+                                        if ($applianceName['logAction'] == 0) {
+                                            $action = "Turn Off";
+                                        } elseif ($applianceName['logAction'] == 1) {
+                                            $action = "Turn On";
+                                        } elseif ($applianceName['logAction'] == 2) {
+                                            $action = "Appliance Disabled";
+                                        } elseif ($applianceName['logAction'] == 3) {
+                                            $action = "Appliance Enabled";
+                                        }
+                                        if ($applianceName['logVia'] == 0) {
+                                            $action2 = "Webpage";
+                                            $exec = $userFullName;
+                                        } elseif ($applianceName['logVia'] == 1) {
+                                            $action2 = "Manual";
+                                            $exec = "NA";
+                                        } elseif ($applianceName['logVia'] == 3) {
+                                            $action2 = "Schedule";
+                                            $exec = "NA";
+                                        }
+                                        echo '<td class="text-center">'. $applianceName['D'].'</td>
+                                        <td class="text-center">'. $applianceName['T'].'</td>
+                                        <td class="text-center">'.$applianceName['logAppliance'].'</td>
+                                        <td class="text-center">'.$action.'</td>
+                                        <td class="text-center">'.$action2.'</td>
+                                        <td class="text-center">'.$exec.'</td>
+                                        </tr>';
+                                    }
+                                }else{
+                                    $recNotif = "No Records Available";
+                                    echo '</tbody>'.$recNotif.'</table>';                          
+                            }?>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    $(document).ready(function() {
+    $('#datable').DataTable();
+} );
+    </script>
+</body>

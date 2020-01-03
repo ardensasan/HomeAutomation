@@ -1,0 +1,117 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+  <!--<![endif]-->
+  <body>
+<?php 
+include "sessions.php";
+include "databaseConnection.php";
+include_once "navigator.php";
+$userType = $_SESSION['userType'];
+$userID = $_SESSION['userID'];
+$currentPage = basename($_SERVER['PHP_SELF']);
+?>
+    <div class="dashboard-wrapper">
+      <div class="container-fluid dashboard-content ">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-bordered table-responsive-md table-striped text-center">
+              <thead>
+                <col width="60">
+                <col width="250">
+                <col width="150">
+                <col width="200">
+                <tr>
+                  <th class="text-center">Number
+                  </th>
+                  <th class="text-center">Appliance Name
+                  </th>
+                  <th class="text-center">Current Rating
+                  </th>
+                  <th class="text-center">Status
+                  </th>
+                  <th class="text-center">Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php 
+$count = 1;
+$query = "SELECT * FROM `tbl_appliances`";
+$getApplianceList=$conn->prepare($query);
+$getApplianceList->execute();
+while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
+{
+if($applianceList['applianceStatus'] == 0){
+$deviceStatus = '<td><h4><span class="badge badge-danger">Turned Off</span></h4></td>
+<td><span class="table-remove"><button type="button"
+class="btn btn-success btn-rounded btn-sm my-0" onclick="changeApplianceStatus(1,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Turn On</button></span>';
+if($userType == ADMIN){
+$deviceStatus =$deviceStatus.'<span class="table-remove"><button type="button"
+class="btn btn-danger btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
+</td>';
+}else{
+$deviceStatus = "$deviceStatus.'</td>'";
+}
+$powerConsumption = "1.5 A";
+}else if($applianceList['applianceStatus'] == 1){
+    $deviceStatus = '<td><h4><span class="badge badge-success">Turned On</span></h4>
+    <td><span class="table-remove"><button type="button"
+    class="btn btn-danger btn-rounded btn-sm my-0" onclick="changeApplianceStatus(0,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Turn Off</button></span>';    
+  if($userType == ADMIN){
+    $deviceStatus =$deviceStatus.'<span class="table-remove"><button type="button"
+    class="btn btn-danger btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
+    </td>';
+  }else{
+    $deviceStatus = "$deviceStatus.'</td>'";
+  }
+$powerConsumption = "1.5 A";
+}else if($applianceList['applianceStatus'] == 2){
+  if($userType == ADMIN){
+    $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
+    <td><span class="table-remove"><button type="button"
+    class="btn btn-danger btn-rounded btn-sm my-0" onclick="enableAppliance(3,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Enable</button></span>
+    </td>';
+  }else{
+    $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
+    <td>Disabled by Admin</td>';
+  }
+$powerConsumption = "Calibrating";
+}
+echo '<tr><td>'.$applianceList['applianceID'].'</td>
+<td>'.$applianceList['applianceName'].'</td>
+<td>'.$powerConsumption.'</td>
+'.$deviceStatus.'
+</tr>';
+}
+?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  <!-- edit schedule modal -->
+  <div class="modal fade" id="editApplianceModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Appliance
+          </h4>
+          <button type="button" class="close" data-dismiss="modal">&times;
+          </button>
+        </div>
+        <div class="modal-body">
+            <input type="text" class="form-control" id="applianceName" placeholder="">
+            <input type="hidden" value="">
+        </div>
+          <button type="button" id="applianceID" value="" class="btn btn-default" data-dismiss="modal" onclick = "changeApplianceName(this.value,document.getElementById('applianceName').placeholder)">Save
+          </button>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>
