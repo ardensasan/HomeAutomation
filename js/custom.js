@@ -121,10 +121,31 @@ function changeApplianceModal(applianceID,applianceName)
     document.getElementById("applianceID").value = applianceID;
 }
 
-//logout user
-function gago()
+//save edit profile settings
+function saveSettings()
 {
-    alert("SSSS");
+    var settingsFirstName = document.getElementById("settingsFirstName").value;
+    var settingsLastName = document.getElementById("settingsLastName").value;
+    var settingsPass1 = document.getElementById("settingsPass1").value;
+    var settingsPass2 = document.getElementById("settingsPass2").value;
+    var settingsPhoneNumber = document.getElementById("settingsPhoneNumber").value;
+    if(settingsFirstName && settingsLastName && settingsPass1 && settingsPass2 && settingsPhoneNumber){
+        if(settingsPass1 == settingsPass2){ 
+            $.ajax({
+                url: "queries/saveSettings.php",
+                method: "POST",
+                data: {userFirstName: settingsFirstName, userLastName : settingsLastName, userPass : settingsPass2, userPhoneNumber : settingsPhoneNumber },
+                success: function(){
+                    alert("Profile Successfully Updated");
+                    location.reload();
+                }
+            })
+        }else{
+            alert("password not the same");
+        }
+    }else{
+        alert("Fill all fields");
+    }
 }
 
 
@@ -238,6 +259,24 @@ function getReadings()
         url: "queries/getCurrentReadings.php",
         method: "POST",
         success: function(accountStatus){
+            alert(accountStatus)
+        }
+    })
+}
+
+//remove account
+function removeAccount()
+{
+    alert("dsadas");
+}
+
+//clear all logs
+function clearLogs()
+{
+    $.ajax({
+        url: "queries/clearLogs.php",
+        success: function(accountStatus){
+            location.reload();
             alert(accountStatus)
         }
     })

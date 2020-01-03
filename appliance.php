@@ -6,7 +6,7 @@
 <html class="no-js" lang="en">
   <!--<![endif]-->
   <body>
-<?php 
+    <?php 
 include "sessions.php";
 include "databaseConnection.php";
 include_once "navigator.php";
@@ -29,7 +29,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                   </th>
                   <th class="text-center">Appliance Name
                   </th>
-                  <th class="text-center">Current Rating
+                  <th class="text-center">Power
                   </th>
                   <th class="text-center">Status
                   </th>
@@ -50,35 +50,35 @@ $deviceStatus = '<td><h4><span class="badge badge-danger">Turned Off</span></h4>
 <td><span class="table-remove"><button type="button"
 class="btn btn-success btn-rounded btn-sm my-0" onclick="changeApplianceStatus(1,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Turn On</button></span>';
 if($userType == ADMIN){
-$deviceStatus =$deviceStatus.'<span class="table-remove"><button type="button"
-class="btn btn-danger btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
+$deviceStatus =$deviceStatus.'     <span class="table-remove"><button type="button"
+class="btn btn-dark btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
 </td>';
 }else{
-$deviceStatus = "$deviceStatus.'</td>'";
+$deviceStatus = "$deviceStatus"."</td>";
 }
 $powerConsumption = "1.5 A";
 }else if($applianceList['applianceStatus'] == 1){
-    $deviceStatus = '<td><h4><span class="badge badge-success">Turned On</span></h4>
-    <td><span class="table-remove"><button type="button"
-    class="btn btn-danger btn-rounded btn-sm my-0" onclick="changeApplianceStatus(0,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Turn Off</button></span>';    
-  if($userType == ADMIN){
-    $deviceStatus =$deviceStatus.'<span class="table-remove"><button type="button"
-    class="btn btn-danger btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
-    </td>';
-  }else{
-    $deviceStatus = "$deviceStatus.'</td>'";
-  }
+$deviceStatus = '<td><h4><span class="badge badge-success">Turned On</span></h4>
+<td><span class="table-remove"><button type="button"
+class="btn btn-danger btn-rounded btn-sm my-0" onclick="changeApplianceStatus(0,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Turn Off</button></span>';    
+if($userType == ADMIN){
+$deviceStatus =$deviceStatus.'     <span class="table-remove"><button type="button"
+class="btn btn-dark btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
+</td>';
+}else{
+$deviceStatus = "$deviceStatus"."</td>";
+}
 $powerConsumption = "1.5 A";
 }else if($applianceList['applianceStatus'] == 2){
-  if($userType == ADMIN){
-    $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
-    <td><span class="table-remove"><button type="button"
-    class="btn btn-danger btn-rounded btn-sm my-0" onclick="enableAppliance(3,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Enable</button></span>
-    </td>';
-  }else{
-    $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
-    <td>Disabled by Admin</td>';
-  }
+if($userType == ADMIN){
+$deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
+<td><span class="table-remove"><button type="button"
+class="btn btn-info btn-rounded btn-sm my-0" onclick="enableAppliance(3,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Enable</button></span>
+</td>';
+}else{
+$deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
+<td>Disabled by Admin</td>';
+}
 $powerConsumption = "Calibrating";
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
@@ -93,25 +93,25 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
           </div>
         </div>
       </div>
-  <!-- edit schedule modal -->
-  <div class="modal fade" id="editApplianceModal" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Edit Appliance
-          </h4>
-          <button type="button" class="close" data-dismiss="modal">&times;
-          </button>
+      <!-- edit schedule modal -->
+      <div class="modal fade" id="editApplianceModal" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Edit Appliance
+              </h4>
+              <button type="button" class="close" data-dismiss="modal">&times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <input type="text" class="form-control" id="applianceName" placeholder="">
+              <input type="hidden" value="">
+            </div>
+            <button type="button" id="applianceID" value="" class="btn btn-default" data-dismiss="modal" onclick = "changeApplianceName(this.value,document.getElementById('applianceName').placeholder)">Save
+            </button>
+          </div>
         </div>
-        <div class="modal-body">
-            <input type="text" class="form-control" id="applianceName" placeholder="">
-            <input type="hidden" value="">
-        </div>
-          <button type="button" id="applianceID" value="" class="btn btn-default" data-dismiss="modal" onclick = "changeApplianceName(this.value,document.getElementById('applianceName').placeholder)">Save
-          </button>
       </div>
-    </div>
-    </div>
-  </body>
-</html>
+      </body>
+    </html>

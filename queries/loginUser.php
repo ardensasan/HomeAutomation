@@ -12,7 +12,10 @@ if($getUserDetails->rowCount() > 0) {
     while($userDetails = $getUserDetails->fetch(PDO::FETCH_ASSOC)){
         $_SESSION['userType'] = $userDetails['userType'];
         $_SESSION['userID'] = $userDetails['userID'];
-        $_SESSION['userFullName'] = $userDetails['userFirstName'].' '.$userDetails['userLastName'];
+        $_SESSION['userFirstName'] = $userDetails['userFirstName'];
+        $_SESSION['userLastName'] = $userDetails['userLastName'];
+        $_SESSION['userPass'] = $userDetails['userPass'];
+        $_SESSION['userPhoneNumber'] = $userDetails['userPhoneNumber'];
     }
     $state =  "1";
 }else{

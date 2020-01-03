@@ -11,6 +11,10 @@
     include "sessions.php";
 include_once "navigator.php";
 $currentPage = basename($_SERVER['PHP_SELF']);
+$userPhoneNumber = $_SESSION['userPhoneNumber'];
+$userPass = $_SESSION['userPass'];
+$userFirstName = $_SESSION['userFirstName'];
+$userLastName = $_SESSION['userLastName'];
 ?>
     <div class="dashboard-wrapper">
       <div class="container-fluid dashboard-content ">
@@ -38,7 +42,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </i>
                       </span>
                     </div>
-                    <input type="search" class="form-control filter-list-input" placeholder="First Name" aria-label="First Name">
+                    <input type="text" class="form-control filter-list-input" maxlength="20" id="settingsFirstName" value = "<?php echo $userFirstName ?>" placeholder="First Name" aria-label="First Name">
                   </div>
                 </div>
                 <div class="form-group col-md-6">
@@ -51,7 +55,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </i>
                       </span>
                     </div>
-                    <input type="search" class="form-control filter-list-input" placeholder="Last Name" aria-label="Last Name">
+                    <input type="text" class="form-control filter-list-input" maxlength="20" id="settingsLastName" value = "<?php echo $userLastName ?>" placeholder="Last Name" aria-label="Last Name">
                   </div>
                 </div>
               </div>
@@ -66,7 +70,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </i>
                       </span>
                     </div>
-                    <input type="password" class="form-control filter-list-input" placeholder="Password" aria-label="Password">
+                    <input type="password" class="form-control filter-list-input" maxlength="10" id="settingsPass1" value = "<?php echo $userPass ?>" placeholder="Password" aria-label="Password">
                   </div>
                 </div>
                 <div class="form-group col-md-6">
@@ -79,7 +83,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </i>
                       </span>
                     </div>
-                    <input type="password" class="form-control filter-list-input" placeholder="Confirm Password" aria-label="Confirm Password">
+                    <input type="password" class="form-control filter-list-input" maxlength="10" id="settingsPass2" value = "<?php echo $userPass ?>" placeholder="Confirm Password" aria-label="Confirm Password">
                   </div>
                 </div>
               </div>
@@ -90,15 +94,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                   <div class="input-group input-group-round">
                     <div class="input-group-prepend">
                       <span class="input-group-text">
-                        <i class="fas fa-phone">
+                        <i class="fas fa-mobile"> +63
                         </i>
                       </span>
                     </div>
-                    <input type="search" class="form-control filter-list-input" placeholder="Phone Number" aria-label="Phone Number">
+                    <input type="text" maxlength="10" class="form-control filter-list-input" oninput="this.value=this.value.replace(/[^0-9]/g,'');" id="settingsPhoneNumber" value = "<?php echo $userPhoneNumber ?>" placeholder="Phone Number" aria-label="Phone Number">
                   </div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">Save
+              <button type="button" class="btn btn-primary" onclick="saveSettings()">Save</button>
               </button>
             </form>
           </div>

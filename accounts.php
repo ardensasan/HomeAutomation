@@ -6,7 +6,7 @@
 <html class="no-js" lang="en">
   <!--<![endif]-->
   <body>
-    <?php 
+  <?php 
 include "sessions.php";
 include_once "navigator.php";
 include "databaseConnection.php";
@@ -32,9 +32,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </thead>
         <tbody>
             <?php 
-            $query = "SELECT * FROM `tbl_users`";
+            $query = "SELECT * FROM `tbl_users` WHERE `userType` != ?";
             $getUserDetails=$conn->prepare($query);
-            $getUserDetails->execute();
+            $getUserDetails->execute([ADMIN]);
             while($userDetails = $getUserDetails->fetch(PDO::FETCH_ASSOC))
             {
               $userFullName = $userDetails["userFirstName"].' '.$userDetails["userLastName"];
@@ -50,7 +50,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
               <td class="pt-3-half">'.$userPass.'</td>
               <td>
                 <span class="table-remove"><button type="button"
-                    class="btn btn-danger btn-rounded btn-sm my-0" onclick="gago('.$userID.')">Remove</button></span>
+                    class="btn btn-danger btn-rounded btn-sm my-0" onclick="removeAccount('.$userID.')">Remove</button></span>
               </td>
             </tr>';
             }

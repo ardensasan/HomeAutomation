@@ -71,7 +71,9 @@ include_once "databaseConnection.php";
             </div>
         </div>
     </div><!-- .animated -->
-
+    <div class="card">
+    <button type="button" class="btn btn-info" onclick="clearLogs()">Clear Logs</button>
+    </div>
 <script>
     $(document).ready(function() {
     $('#datable').DataTable();

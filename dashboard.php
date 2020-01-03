@@ -3,7 +3,6 @@
 include "sessions.php";
 include_once "navigator.php";
 include_once "databaseConnection.php";
-$userFullName = $_SESSION['userFullName'];
 ?>
 <body>
     <!-- content -->
@@ -27,7 +26,9 @@ $userFullName = $_SESSION['userFullName'];
                                     <tbody>
                                     <?php
                                     $count = 1;
-                                    $query = "SELECT logID, DATE_FORMAT(DATE((logDateTime)),'%M %d %Y') as D, TIME_FORMAT((TIME(logDateTime)),'%h:%i %p') as T, logAppliance, logAction, logVia FROM tbl_logs ORDER BY logID DESC LIMIT 5";
+                                    $query = "SELECT CONCAT(tbl_users.userFirstName,' ',tbl_users.userLastName) AS FullName,tbl_logs.logID, DATE_FORMAT(DATE((tbl_logs.logDateTime)),'%M %d %Y') as D, TIME_FORMAT((TIME(tbl_logs.logDateTime)),'%h:%i %p') as T, tbl_logs.logAppliance, tbl_logs.logAction, tbl_logs.logVia FROM tbl_logs
+                                    JOIN tbl_users ON tbl_logs.logUser=tbl_users.userID
+                                    ORDER BY tbl_logs.logID DESC LIMIT 5";
                                     $getapplianceName=$conn->prepare($query);
                                     $getapplianceName->execute();
                                     if($getapplianceName->rowCount() > 0)
@@ -45,7 +46,7 @@ $userFullName = $_SESSION['userFullName'];
                                         }
                                         if ($applianceName['logVia'] == 0) {
                                             $action2 = "Webpage";
-                                            $exec = $userFullName;
+                                            $exec = $applianceName['FullName'];
                                         } elseif ($applianceName['logVia'] == 1) {
                                             $action2 = "Manual";
                                             $exec = "NA";
