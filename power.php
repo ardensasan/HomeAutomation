@@ -11,80 +11,43 @@
 <?php 
 include "sessions.php";
 include_once "navigator.php";
-$currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <div class="dashboard-wrapper">
     <div class="container-fluid dashboard-content ">
         <div class="card">
             <div class="card-body">
-            
                 <!-- ============================================================== -->
                 <!-- end pageheader -->
                 <!-- ============================================================== -->
                     <div class="row">
-                        <!-- ============================================================== -->
-                        <!--bar chart  -->
-                        <!-- ============================================================== -->
-                        <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="card">
-                                <h5 class="card-header">2019 Power Consumption</h5>
-                                <div class="card-body">
-                                    <div id="bar-example"></div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- line graph #1 start -->
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="card">
-                                <h5 class="card-header">Appliance #1</h5>
-                                <div class="card-body">
-                                    <div id="applianceGraph1"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- line graph #1 end -->
-                        <!-- line graph #2 start -->
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="card">
-                                <h5 class="card-header">Appliance #2</h5>
-                                <div class="card-body">
-                                    <div id="applianceGraph2"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- line graph #2 end -->
-                        <!-- line graph #3 start -->
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="card">
-                                <h5 class="card-header">Appliance #3</h5>
-                                <div class="card-body">
-                                    <div id="applianceGraph3"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- line graph #3 end -->
-                        <!-- line graph #4 start -->
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="card">
-                                <h5 class="card-header">Appliance #4</h5>
-                                <div class="card-body">
-                                    <div id="applianceGraph4"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- line graph #4 end -->
-                    </div>
+                    <?php
+                    $currentPage = basename($_SERVER['PHP_SELF']);
+                    $count = 1;
+                    $query = "SELECT * FROM `tbl_appliances`";
+                    $getApplianceList=$conn->prepare($query);
+                    $getApplianceList->execute();
+                    while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
+                    {?>
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                      <div class="card">
+                          <h5 class="card-header"><?php echo $applianceList['applianceName'] ?></h5>
+                          <div class="card-body">
+                              <div id="applianceGraph<?php echo $count; ?>"></div>
+                          </div>
+                      </div>
+                  </div><?php
+                  $count++;
+                    }?>
                     <div class="row">  
             </div>
             </div>
         </div>
     </div>
-    <input type="hidden" id="custId" name="custId" value="3487">
 </div>
 <script>
 function fetchdata(){
  $.ajax({
-  url: 'queries/getCurrentReadings.php',
+  url: 'queries/getReadings.php',
   type: 'post',
   data: {applianceID: 1},
   dataType: 'JSON',
@@ -92,7 +55,7 @@ function fetchdata(){
    // Perform operation on return value     
    applianceGraph1.setData(data);
    $.ajax({
-  url: 'queries/getCurrentReadings.php',
+  url: 'queries/getReadings.php',
   type: 'post',
   data: {applianceID: 2},
   dataType: 'JSON',
@@ -102,7 +65,7 @@ function fetchdata(){
       }
     });
     $.ajax({
-  url: 'queries/getCurrentReadings.php',
+  url: 'queries/getReadings.php',
   type: 'post',
   data: {applianceID: 3},
   dataType: 'JSON',
@@ -112,7 +75,7 @@ function fetchdata(){
       }
     });
     $.ajax({
-  url: 'queries/getCurrentReadings.php',
+  url: 'queries/getReadings.php',
   type: 'post',
   data: {applianceID: 4},
   dataType: 'JSON',
