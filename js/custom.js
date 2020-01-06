@@ -76,7 +76,7 @@ function loginUser()
             if(accountStatus == "0"){
                 changeText("errorMessage","Account doesn't exist");
             }else if(accountStatus == "1"){
-                changeText("errorMessage"," ")
+                changeText("errorMessage"," ");
                 alert("Successfully logged in!");
                 window.location = "dashboard.php";
             }

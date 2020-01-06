@@ -7,7 +7,8 @@ $getApplianceReadings = $conn->prepare($query);
 $getApplianceReadings->execute([$applianceID]);
 while($applianceReadings = $getApplianceReadings->fetch(PDO::FETCH_ASSOC))
 {
-    array_push($rArray,(array('DT' => $applianceReadings['T'] , 'Voltage' => $applianceReadings['rVoltage'], 'Current' => $applianceReadings['rCurrent'])));
+    $watt = $applianceReadings['rVoltage'] * $applianceReadings['rCurrent'];
+    array_push($rArray,(array('DT' => $applianceReadings['T'] , 'Watt' => $watt)));
 }
 //echo json_encode($rArray);
 // $result = array(

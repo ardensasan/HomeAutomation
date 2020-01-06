@@ -100,16 +100,16 @@ $(document).ready(function(){
 var applianceGraph1 = Morris.Line({
   element: 'applianceGraph1',
   data: [ 
-    { DT: "June", Current: 0, Voltage: 0},
-    { DT: "July", Current: 0, Voltage: 0},
-    { DT: "August", Current: 0, Voltage: 0},
-    { DT: "September", Current: 0, Voltage: 0},
-    { DT: "October", Current: 0, Voltage: 0},
-    { DT: "November", Current: 0, Voltage: 0},
-    { DT: "December", Current: 0, Voltage: 0}],
+    { DT: "June", Watt: 0},
+    { DT: "July", Watt: 0},
+    { DT: "August", Watt: 0},
+    { DT: "September", Watt: 0},
+    { DT: "October", Watt: 0},
+    { DT: "November", Watt: 0},
+    { DT: "December", Watt: 0}],
   xkey: 'DT',
-  ykeys: ['Current','Voltage'],
-  labels: ['Current (A)','Voltage (V)'],
+  ykeys: ['Watt'],
+  labels: ['Watt (W)'],
   hideHover: 'auto',
   parseTime: false
 });
@@ -117,16 +117,16 @@ var applianceGraph1 = Morris.Line({
 var applianceGraph2 = Morris.Line({
   element: 'applianceGraph2',
   data: [ 
-    { DT: "June", Current: 0, Voltage: 0},
-    { DT: "July", Current: 0, Voltage: 0},
-    { DT: "August", Current: 0, Voltage: 0},
-    { DT: "September", Current: 0, Voltage: 0},
-    { DT: "October", Current: 0, Voltage: 0},
-    { DT: "November", Current: 0, Voltage: 0},
-    { DT: "December", Current: 0, Voltage: 0}],
+    { DT: "June", Watt: 0},
+    { DT: "July", Watt: 0},
+    { DT: "August", Watt: 0},
+    { DT: "September", Watt: 0},
+    { DT: "October", Watt: 0},
+    { DT: "November", Watt: 0},
+    { DT: "December", Watt: 0}],
   xkey: 'DT',
-  ykeys: ['Current','Voltage'],
-  labels: ['Current (A)','Voltage (V)'],
+  ykeys: ['Watt'],
+  labels: ['Watt (W)'],
   hideHover: 'auto',
   parseTime: false
 });
@@ -134,16 +134,16 @@ var applianceGraph2 = Morris.Line({
 var applianceGraph3 = Morris.Line({
   element: 'applianceGraph3',
   data: [ 
-    { DT: "June", Current: 0, Voltage: 0},
-    { DT: "July", Current: 0, Voltage: 0},
-    { DT: "August", Current: 0, Voltage: 0},
-    { DT: "September", Current: 0, Voltage: 0},
-    { DT: "October", Current: 0, Voltage: 0},
-    { DT: "November", Current: 0, Voltage: 0},
-    { DT: "December", Current: 0, Voltage: 0}],
+    { DT: "June", Watt: 0},
+    { DT: "July", Watt: 0},
+    { DT: "August", Watt: 0},
+    { DT: "September", Watt: 0},
+    { DT: "October", Watt: 0},
+    { DT: "November", Watt: 0},
+    { DT: "December", Watt: 0}],
   xkey: 'DT',
-  ykeys: ['Current','Voltage'],
-  labels: ['Current (A)','Voltage (V)'],
+  ykeys: ['Watt'],
+  labels: ['Watt (W)'],
   hideHover: 'auto',
   parseTime: false
 });
@@ -151,16 +151,16 @@ var applianceGraph3 = Morris.Line({
 var applianceGraph4 = Morris.Line({
   element: 'applianceGraph4',
   data: [ 
-    { DT: "June", Current: 0, Voltage: 0},
-    { DT: "July", Current: 0, Voltage: 0},
-    { DT: "August", Current: 0, Voltage: 0},
-    { DT: "September", Current: 0, Voltage: 0},
-    { DT: "October", Current: 0, Voltage: 0},
-    { DT: "November", Current: 0, Voltage: 0},
-    { DT: "December", Current: 0, Voltage: 0}],
+    { DT: "June", Watt: 0},
+    { DT: "July", Watt: 0},
+    { DT: "August", Watt: 0},
+    { DT: "September", Watt: 0},
+    { DT: "October", Watt: 0},
+    { DT: "November", Watt: 0},
+    { DT: "December", Watt: 0}],
   xkey: 'DT',
-  ykeys: ['Current','Voltage'],
-  labels: ['Current (A)','Voltage (V)'],
+  ykeys: ['Watt'],
+  labels: ['Watt (W)'],
   hideHover: 'auto',
   parseTime: false
 });
