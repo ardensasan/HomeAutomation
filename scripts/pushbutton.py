@@ -10,10 +10,10 @@ connection = mysql.connector.connect(
   passwd="abaynfriends",
   database="homeautomation"
 )
-A1 = 35;
-A2 = 37;
-A3 = 38;
-A4 = 40;
+A1 = 31;
+A2 = 33;
+A3 = 35;
+A4 = 37;
 #set pins with pullup resistors
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(A1,GPIO.IN,pull_up_down=GPIO.PUD_UP)
