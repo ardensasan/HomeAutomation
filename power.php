@@ -30,7 +30,7 @@ include_once "navigator.php";
                     {?>
                       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                       <div class="card">
-                          <h5 class="card-header"><?php echo $applianceList['applianceName'] ?></h5>
+                          <h5 class="card-header"><?php echo $applianceList['applianceName'] ?><span id="span<?php echo $count; ?>"></span></h5>
                           <div class="card-body">
                               <div id="applianceGraph<?php echo $count; ?>"></div>
                           </div>
@@ -54,6 +54,15 @@ function fetchdata(){
   success: function(data){
    // Perform operation on return value     
    applianceGraph1.setData(data);
+       $.ajax({
+  url: 'queries/displayWatt.php',
+  type: 'post',
+  data: {applianceID: 1},
+  success: function(data1){
+   // Perform operation on return value    
+   document.getElementById("span1").innerHTML = data1;
+      }
+    });
    $.ajax({
   url: 'queries/getReadings.php',
   type: 'post',
@@ -62,6 +71,15 @@ function fetchdata(){
   success: function(data){
    // Perform operation on return value     
    applianceGraph2.setData(data);
+          $.ajax({
+  url: 'queries/displayWatt.php',
+  type: 'post',
+  data: {applianceID: 2},
+  success: function(data2){
+   // Perform operation on return value    
+   document.getElementById("span2").innerHTML = data2;
+      }
+    });
       }
     });
     $.ajax({
@@ -86,13 +104,13 @@ function fetchdata(){
     });
 },
   complete:function(data){
-   setTimeout(fetchdata,2000);
+   setTimeout(fetchdata,1000);
   }
  });
 }
 
 $(document).ready(function(){
- setTimeout(fetchdata,2000);
+ setTimeout(fetchdata,1000);
 });
 </script>
 
@@ -110,7 +128,7 @@ var applianceGraph1 = Morris.Line({
   xkey: 'DT',
   ykeys: ['Watt'],
   labels: ['Watt (W)'],
-  hideHover: 'auto',
+  hideHover: false,
   parseTime: false
 });
 
@@ -127,7 +145,7 @@ var applianceGraph2 = Morris.Line({
   xkey: 'DT',
   ykeys: ['Watt'],
   labels: ['Watt (W)'],
-  hideHover: 'auto',
+  hideHover: false,
   parseTime: false
 });
 
@@ -144,7 +162,7 @@ var applianceGraph3 = Morris.Line({
   xkey: 'DT',
   ykeys: ['Watt'],
   labels: ['Watt (W)'],
-  hideHover: 'auto',
+  hideHover: false,
   parseTime: false
 });
 
@@ -161,7 +179,7 @@ var applianceGraph4 = Morris.Line({
   xkey: 'DT',
   ykeys: ['Watt'],
   labels: ['Watt (W)'],
-  hideHover: 'auto',
+  hideHover: false,
   parseTime: false
 });
 

@@ -1,8 +1,8 @@
 <?php
 $host='localhost';
 $db = 'homeautomation';
-$username = "root";
-$password = "";
+$username = "abaynfriends";
+$password = "abaynfriends";
 $dsn= "mysql:host=$host;dbname=$db";
  
 try{
