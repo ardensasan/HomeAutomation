@@ -277,7 +277,47 @@ function clearLogs()
         url: "queries/clearLogs.php",
         success: function(accountStatus){
             location.reload();
-            alert(accountStatus)
         }
     })
+}
+
+//display calibration modal
+function calibrateDisplay(applianceID,applianceName)
+{
+    document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">Start Calibration</span></button>';
+    document.getElementById("calAppID").value = applianceID;
+    document.getElementById("calAppName").value = applianceName;
+    $('#calibrateModal').modal('show')
+
+}
+
+//display calibration modal
+function calibrateCount(applianceID,applianceName)
+{
+    var applianceID = document.getElementById("calAppID").value;
+    var applianceName = document.getElementById("calAppName").value;
+    var count = 3;
+    document.getElementById("calText").innerHTML = count;
+    var countDown = setInterval(
+        function(){ 
+            count--;
+            document.getElementById("calText").innerHTML = count;
+            if(count == 0){
+                $.ajax({
+                    url: "queries/setRating.php",
+                    method: "POST",
+                    data: {applianceID,applianceID},
+                    success: function(a){
+                        alert(a);
+                    }
+                })
+                document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" data-dismiss ="modal"><span id="calText">Calibration Done</span></button>';
+                clearInterval(countDown);
+            }
+        }, 
+    1000);   
+}
+
+function gago(){
+    alert("sdadsa");
 }

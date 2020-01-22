@@ -45,12 +45,13 @@ $getApplianceList=$conn->prepare($query);
 $getApplianceList->execute();
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
 {
+  $name = $applianceList['applianceName'];
 if($applianceList['applianceStatus'] == 0){
 $deviceStatus = '<td><h4><span class="badge badge-danger">Turned Off</span></h4></td>
 <td><span class="table-remove"><button type="button"
 class="btn btn-success btn-rounded btn-sm my-0" onclick="changeApplianceStatus(1,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Turn On</button></span>';
 if($userType == ADMIN){
-$deviceStatus =$deviceStatus.'     <span class="table-remove"><button type="button"
+$deviceStatus = $deviceStatus.'     <span class="table-remove"><button type="button"
 class="btn btn-dark btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
 </td>';
 }else{
@@ -62,7 +63,7 @@ $deviceStatus = '<td><h4><span class="badge badge-success">Turned On</span></h4>
 <td><span class="table-remove"><button type="button"
 class="btn btn-danger btn-rounded btn-sm my-0" onclick="changeApplianceStatus(0,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Turn Off</button></span>';    
 if($userType == ADMIN){
-$deviceStatus =$deviceStatus.'     <span class="table-remove"><button type="button"
+$deviceStatus = $deviceStatus.'     <span class="table-remove"><button type="button"
 class="btn btn-dark btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\',\''.$applianceList['applianceOutputPin'].'\',\''.$userID.'\')">Disable</button></span>
 </td>';
 }else{
@@ -83,7 +84,7 @@ $powerConsumption = "Calibrating";
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td>
-<td>'.$powerConsumption.'</td>
+<td>'.$powerConsumption.'<button class="btn" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>
 '.$deviceStatus.'
 </tr>';
 }
@@ -93,6 +94,28 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
           </div>
         </div>
       </div>
+      <!-- calibrate modal -->
+      <div id="calibrateModal" class="modal fade bd-example-modal-sm" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <input type="hidden" value="" id="calAppID">
+    <input type="hidden" value="" id="calAppName">
+    <div class="modal-content">
+      <div class="modal-header">
+       <h4>Calibrate</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+  
+      </div>
+      <div class="modal-body">
+        <p>Turn on appliance before calibration</p>
+      <div class="modal-body" id="calibrateCountdown">
+        <button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">Start Calibration</span></button>
+    </div>
+
+  </div>
+</div>
+<!-- end calibrate modal -->
       <!-- edit schedule modal -->
       <div class="modal fade" id="editApplianceModal" role="dialog">
         <div class="modal-dialog">
