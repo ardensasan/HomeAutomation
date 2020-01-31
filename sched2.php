@@ -16,6 +16,7 @@ $year = date('Y');
 $date = $month . "/" . $day . "/" . $year;
 $currentPage = basename($_SERVER['PHP_SELF']);
 $hasRecord = "";
+
 ?>
 <div class="dashboard-wrapper">
 <div class="container-fluid dashboard content">
@@ -48,6 +49,7 @@ ON tbl_schedules.scheduleApplianceID=tbl_appliances.applianceID";
 $getApplianceSchedule = $conn->prepare($query);
 $getApplianceSchedule->execute();
 while($applianceSchedule = $getApplianceSchedule->fetch(PDO::FETCH_ASSOC)){
+    $count = 0;
     if ($applianceSchedule['scheduleAction'] == 0) {
         $action = "Turn Off";
         } elseif ($applianceSchedule['scheduleAction'] == 1) {
@@ -57,10 +59,29 @@ while($applianceSchedule = $getApplianceSchedule->fetch(PDO::FETCH_ASSOC)){
         } elseif ($applianceSchedule['scheduleAction'] == 3) {
         $action = "Disable";
         }
-        if(!$applianceSchedule['scheduleRepeat']){
+        if($applianceSchedule['scheduleRepeat'] == "0000000"){
             $repeat = "No";
         }else{
-            $repeat = "Yes";
+            $repeat = "";
+            $array = str_split($applianceSchedule['scheduleRepeat']);
+foreach ($array as $char) {
+$count++;
+if ($count == 1 && $char == '1') {
+$repeat .= "M ";
+} elseif ($count == 2 && $char == '1') {
+$repeat .= " T ";
+} elseif ($count == 3 && $char == '1') {
+$repeat .= " W ";
+} elseif ($count == 4 && $char == '1') {
+$repeat .= " Th ";
+} elseif ($count == 5 && $char == '1') {
+$repeat .= " F ";
+} elseif ($count == 6 && $char == '1') {
+$repeat .= " Sa ";
+} elseif ($count == 7 && $char == '1') {
+$repeat .= " Sun ";
+}
+}
         }
         echo '<tr><td>'.$applianceSchedule['Date'].'</td>
         <td>'.$applianceSchedule['Time'].'</td>
@@ -79,5 +100,5 @@ while($applianceSchedule = $getApplianceSchedule->fetch(PDO::FETCH_ASSOC)){
 </div>
 </div>
 </div>
-  </body>
+s</body>
 </html>
