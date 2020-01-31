@@ -23,22 +23,21 @@ while($applianceStatus = $getApplianceStatus->fetch(PDO::FETCH_ASSOC)){
 
 $query = "INSERT INTO `tbl_readings` (applianceID,rCurrent,rVoltage,rDateTime) VALUES (?,?,?,?)";
 $addReadigns= $conn->prepare($query);
-$addReadigns->execute([1,rand(-10,10),rand(-10,20),$date]);
+$addReadigns->execute([1,rand(8,10),rand(18,20),$date]);
 
 $query = "INSERT INTO `tbl_readings` (applianceID,rCurrent,rVoltage,rDateTime) VALUES (?,?,?,?)";
 $addReadigns= $conn->prepare($query);
-$addReadigns->execute([2,rand(-10,10),rand(-10,20),$date]);
+$addReadigns->execute([2,rand(1,3),rand(3,5),$date]);
 
 $query = "INSERT INTO `tbl_readings` (applianceID,rCurrent,rVoltage,rDateTime) VALUES (?,?,?,?)";
 $addReadigns= $conn->prepare($query);
-$addReadigns->execute([3,rand(-10,10),rand(-10,20),$date]);
+$addReadigns->execute([3,rand(3,5),rand(6,8),$date]);
 
 $query = "INSERT INTO `tbl_readings` (applianceID,rCurrent,rVoltage,rDateTime) VALUES (?,?,?,?)";
 $addReadigns= $conn->prepare($query);
-$addReadigns->execute([4,rand(-10,10),rand(-10,20),$date]);
+$addReadigns->execute([4,rand(1,3),rand(1,3),$date]);
 
 $query = "DELETE FROM `tbl_readings` WHERE rDateTime < ?";
 $deleteReadings = $conn->prepare($query);
 $deleteReadings->execute([$datetime]);
-echo $status;
 ?>

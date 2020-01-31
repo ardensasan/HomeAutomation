@@ -213,9 +213,9 @@ $repeat = "";
           <div class="modal-body">
             <!-- date picker -->
             Date
-            <div class="form-group">
+            <div class="form-group" id="scheduleDatePicker">
               <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
-                <input type="text" onkeydown="return false" value ="12/25/2020" id="scheduleDate" class="form-control datetimepicker-input" data-target="#datetimepicker4" data-toggle="datetimepicker"/>
+                <input type="text" onkeydown="return false" value ="<?php echo date("m/d/y");?>" id="scheduleDate" class="form-control datetimepicker-input" data-target="#datetimepicker4" data-toggle="datetimepicker"/>
                 <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
                   <div class="input-group-text">
                     <i class="far fa-calendar-alt">

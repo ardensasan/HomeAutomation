@@ -54,16 +54,13 @@ function fetchdata(){
   success: function(data){
    // Perform operation on return value     
    applianceGraph1.setData(data);
-       $.ajax({
-  url: 'queries/displayWatt.php',
-  type: 'post',
-  data: {applianceID: 1},
-  success: function(data1){
-   // Perform operation on return value    
-   document.getElementById("span1").innerHTML = data1;
-      }
-    });
-   $.ajax({
+},
+  complete:function(data){
+   setTimeout(fetchdata,1000);
+  }
+ });
+ //appliance no 2
+ $.ajax({
   url: 'queries/getReadings.php',
   type: 'post',
   data: {applianceID: 2},
@@ -71,18 +68,13 @@ function fetchdata(){
   success: function(data){
    // Perform operation on return value     
    applianceGraph2.setData(data);
-          $.ajax({
-  url: 'queries/displayWatt.php',
-  type: 'post',
-  data: {applianceID: 2},
-  success: function(data2){
-   // Perform operation on return value    
-   document.getElementById("span2").innerHTML = data2;
-      }
-    });
-      }
-    });
-    $.ajax({
+},
+  complete:function(data){
+   setTimeout(fetchdata,1000);
+  }
+ });
+  //appliance no 3
+  $.ajax({
   url: 'queries/getReadings.php',
   type: 'post',
   data: {applianceID: 3},
@@ -90,9 +82,13 @@ function fetchdata(){
   success: function(data){
    // Perform operation on return value     
    applianceGraph3.setData(data);
-      }
-    });
-    $.ajax({
+},
+  complete:function(data){
+   setTimeout(fetchdata,1000);
+  }
+ });
+  //appliance no 4
+  $.ajax({
   url: 'queries/getReadings.php',
   type: 'post',
   data: {applianceID: 4},
@@ -100,8 +96,6 @@ function fetchdata(){
   success: function(data){
    // Perform operation on return value     
    applianceGraph4.setData(data);
-      }
-    });
 },
   complete:function(data){
    setTimeout(fetchdata,1000);

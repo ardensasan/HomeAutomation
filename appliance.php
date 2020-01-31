@@ -22,14 +22,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
               <thead>
                 <col width="60">
                 <col width="250">
-                <col width="150">
+                <col width="90">
+                <col width="60">
                 <col width="200">
                 <tr>
                   <th class="text-center">Number
                   </th>
                   <th class="text-center">Appliance Name
                   </th>
-                  <th class="text-center">Power
+                  <th colspan="2" class="text-center">Average Power
                   </th>
                   <th class="text-center">Status
                   </th>
@@ -57,7 +58,6 @@ class="btn btn-dark btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$appl
 }else{
 $deviceStatus = "$deviceStatus"."</td>";
 }
-$powerConsumption = "1.5 A";
 }else if($applianceList['applianceStatus'] == 1){
 $deviceStatus = '<td><h4><span class="badge badge-success">Turned On</span></h4>
 <td><span class="table-remove"><button type="button"
@@ -69,7 +69,6 @@ class="btn btn-dark btn-rounded btn-sm my-0" onclick="disableAppliance(2,'.$appl
 }else{
 $deviceStatus = "$deviceStatus"."</td>";
 }
-$powerConsumption = "1.5 A";
 }else if($applianceList['applianceStatus'] == 2){
 if($userType == ADMIN){
 $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
@@ -80,11 +79,15 @@ class="btn btn-info btn-rounded btn-sm my-0" onclick="enableAppliance(3,'.$appli
 $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td>
 <td>Disabled by Admin</td>';
 }
-$powerConsumption = "Calibrating";
+}
+if($applianceList['applianceRating'] <= 0){
+  $powerConsumption = "NC";
+}else{
+  $powerConsumption = $applianceList['applianceRating']." W";
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td>
-<td>'.$powerConsumption.'<button class="btn" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>
+<td>'.$powerConsumption.'</td><td><button class="btn" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-cogs"></i></button></td>
 '.$deviceStatus.'
 </tr>';
 }
@@ -103,14 +106,14 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
     <input type="hidden" value="" id="calAppName">
     <div class="modal-content">
       <div class="modal-header">
-       <h4>Calibrate</h4>
+       <h4>Calibrate <span id="calAppliance"></span></h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
   
       </div>
       <div class="modal-body">
-        <p>Turn on appliance before calibration</p>
+        <p><span id="calMessage">Turn On Appliance Before Calibrating</span></p>
       <div class="modal-body" id="calibrateCountdown">
-        <button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">Start Calibration</span></button>
+        <button class="btn btn-primary" onclick="calibrateCount()"><span id="calText"></span></button>
     </div>
 
   </div>

@@ -284,40 +284,51 @@ function clearLogs()
 //display calibration modal
 function calibrateDisplay(applianceID,applianceName)
 {
-    document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">Start Calibration</span></button>';
+    document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calibrate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
     document.getElementById("calAppID").value = applianceID;
     document.getElementById("calAppName").value = applianceName;
+    document.getElementById("calAppliance").innerHTML = applianceName;
+    document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
     $('#calibrateModal').modal('show')
-
 }
 
 //display calibration modal
 function calibrateCount(applianceID,applianceName)
 {
     var applianceID = document.getElementById("calAppID").value;
-    var applianceName = document.getElementById("calAppName").value;
     var count = 3;
-    document.getElementById("calText").innerHTML = count;
+    document.getElementById("calibrateCountdown").innerHTML = '<button class="btn btn-primary" disabled><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please Wait '+count+' seconds&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
     var countDown = setInterval(
         function(){ 
             count--;
-            document.getElementById("calText").innerHTML = count;
+            document.getElementById("calibrateCountdown").innerHTML = '<button class="btn btn-primary" disabled><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please Wait '+count+' seconds&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
             if(count == 0){
                 $.ajax({
                     url: "queries/setRating.php",
                     method: "POST",
                     data: {applianceID,applianceID},
-                    success: function(a){
-                        alert(a);
+                    dataType: 'JSON',
+                    success: function(result){
+                        document.getElementById("calMessage").innerHTML = '&nbsp;&nbsp;Average Power: '+result.avg+' W<br>&nbsp;&nbsp;Upper Control Limit: '+result.UCL+' W<br>&nbsp;&nbsp;Lower Control Limit: '+result.LCL+' W';
                     }
                 })
-                document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" data-dismiss ="modal"><span id="calText">Calibration Done</span></button>';
+                document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" data-dismiss ="modal" onclick="window.location.reload()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calibration Finished&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
                 clearInterval(countDown);
             }
         }, 
     1000);   
 }
 
+//display calibration modal
+function scheduleDisplayModal(applianceID,applianceName)
+{
+    document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calibrate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
+    document.getElementById("calAppID").value = applianceID;
+    document.getElementById("calAppName").value = applianceName;
+    document.getElementById("calAppliance").innerHTML = applianceName;
+    document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
+    $('#calibrateModal').modal('show')
+}
 function gago(){
     alert("sdadsa");
 }
