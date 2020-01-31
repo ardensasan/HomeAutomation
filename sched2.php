@@ -33,10 +33,47 @@ $hasRecord = "";
                       </th>
                       <th class="text-center">Operation
                       </th>
+                      <th class="text-center">Repeat
+                      </th>
                       <th class="text-center">Actions
                       </th>
 </tr>
 </thead>
+<tbody>
+<?php
+$query = "SELECT tbl_schedules.scheduleID,DATE_FORMAT(tbl_schedules.scheduleDate, '%M %d %Y') as Date,TIME_FORMAT(tbl_schedules.scheduleTime, '%h:%i %p') as Time,tbl_appliances.applianceName,tbl_schedules.scheduleAction,tbl_schedules.scheduleRepeat
+FROM tbl_schedules
+LEFT JOIN tbl_appliances
+ON tbl_schedules.scheduleApplianceID=tbl_appliances.applianceID";
+$getApplianceSchedule = $conn->prepare($query);
+$getApplianceSchedule->execute();
+while($applianceSchedule = $getApplianceSchedule->fetch(PDO::FETCH_ASSOC)){
+    if ($applianceSchedule['scheduleAction'] == 0) {
+        $action = "Turn Off";
+        } elseif ($applianceSchedule['scheduleAction'] == 1) {
+        $action = "Turn On";
+        } elseif ($applianceSchedule['scheduleAction'] == 2) {
+        $action = "Enable";
+        } elseif ($applianceSchedule['scheduleAction'] == 3) {
+        $action = "Disable";
+        }
+        if(!$applianceSchedule['scheduleRepeat']){
+            $repeat = "No";
+        }else{
+            $repeat = "Yes";
+        }
+        echo '<tr><td>'.$applianceSchedule['Date'].'</td>
+        <td>'.$applianceSchedule['Time'].'</td>
+        <td>'.$applianceSchedule['applianceName'].'</td>
+        <td>'.$action.'</td>
+        <td>'.$repeat.'</td>
+        <td>
+        <span class="table-remove"><button type="button"
+        class="btn btn-danger btn-rounded btn-sm my-0"
+        onclick="removeSched(\''.$applianceSchedule['scheduleID'].'\')">Remove</button></span></td>';
+}
+?>
+</tbody>
 </table>
 </div>
 </div>
