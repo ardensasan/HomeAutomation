@@ -177,77 +177,29 @@ function changeApplianceName(applianceID,previousApplianceName)
         }
     })
 }
-
+//display schedule forms inputs
+function displaySchedForm(){
+    var schedType = document.getElementById("schedType").value;
+    if(schedType == 1){
+        $("#scheduleDateDiv").show();
+        $("#scheduleDateRepeat").hide();
+    }else{
+        $("#scheduleDateDiv").hide();
+        $("#scheduleDateRepeat").show();
+    }
+}
 //add schedule
 function addSchedule()
 {
-    var scheduleDate = document.getElementById("scheduleDate").value;
-    var scheduleTime = document.getElementById("scheduleTime").value;
-    var sel = document.getElementById("applianceSelect");
-    var scheduleApplianceID = sel.options[sel.selectedIndex].value;
-    var sel2 = document.getElementById("scheduleAction");
-    var scheduleAction = sel2.options[sel2.selectedIndex].value;
-    $.ajax({
-        url: "queries/addSchedule.php",
-        method: "POST",
-        data: {scheduleDate: scheduleDate,scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction},
-        success: function(){
-            location.reload();
-        }
-    })
-}
-//add repeated schedule
-function addRepeatSchedule()
-{
-    var scheduleTime = document.getElementById("scheduleRepeatTime").value;
-    var sel = document.getElementById("applianceRepeatSelect");
-    var scheduleApplianceID = sel.options[sel.selectedIndex].value;
-    var sel2 = document.getElementById("scheduleRepeatAction");
-    var scheduleAction = sel2.options[sel2.selectedIndex].value;
-    var scheduleRepeat = "";
-    if(document.getElementById("dayM").checked){
-        scheduleRepeat +=  "1";
-    }else{
-        scheduleRepeat +=  "0";
-    }
-    if(document.getElementById("dayT").checked){
-        scheduleRepeat +=  "1";
-    }else{
-        scheduleRepeat +=  "0";
-    }
-    if(document.getElementById("dayW").checked){
-        scheduleRepeat +=  "1";
-    }else{
-        scheduleRepeat +=  "0";
-    }
-    if(document.getElementById("dayTh").checked){
-        scheduleRepeat +=  "1";
-    }else{
-        scheduleRepeat +=  "0";
-    }
-    if(document.getElementById("dayF").checked){
-        scheduleRepeat +=  "1";
-    }else{
-        scheduleRepeat +=  "0";
-    }
-    if(document.getElementById("daySa").checked){
-        scheduleRepeat +=  "1";
-    }else{
-        scheduleRepeat +=  "0";
-    }
-    if(document.getElementById("daySun").checked){
-        scheduleRepeat +=  "1";
-    }else{
-        scheduleRepeat +=  "0";
-    }
-    $.ajax({
-        url: "queries/addRepeatSchedule.php",
-        method: "POST",
-        data: {scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction,scheduleRepeat:scheduleRepeat},
-        success: function(){
-            location.reload();
-        }
-    })
+    alert("se");
+    // $.ajax({
+    //     url: "queries/addSchedule.php",
+    //     method: "POST",
+    //     data: {scheduleDate: scheduleDate,scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction},
+    //     success: function(){
+    //         location.reload();
+    //     }
+    // })
 }
 
 //check use login credentials
@@ -289,11 +241,71 @@ function calibrateDisplay(applianceID,applianceName)
     document.getElementById("calAppName").value = applianceName;
     document.getElementById("calAppliance").innerHTML = applianceName;
     document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
-    $('#calibrateModal').modal('show')
+    $('#calibrateModal').modal('show');
+}
+
+//edit appliance name modal
+function editApplianceDisplay(applianceID,applianceName)
+{
+    document.getElementById("editAppID").value = applianceID;
+    document.getElementById("editedApplianceName").value = applianceName;
+    document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
+    $('#editApplianceModal').modal('show');
+}
+
+//edit appliance name
+function editApplianceName()
+{
+    var applianceID = document.getElementById("editAppID").value
+    var applianceName = document.getElementById("editedApplianceName").value;
+    if(applianceName == ""){
+        alert("Please enter an appliance name");
+    }else{
+        $.ajax({
+            url: "queries/editApplianceName.php",
+            method: "POST",
+            data: {applianceID:applianceID,applianceName:applianceName},
+            success: function(){
+                location.reload();
+            }
+        })
+    }
+}
+
+//edit appliance name
+function addAppliance()
+{
+    var applianceName = document.getElementById("addApplianceName").value;
+    var applianceID = document.getElementById("portNum").value;
+    if(applianceName == ""){
+        alert("Please enter an appliance name");
+    }else{
+        $.ajax({
+            url: "queries/editApplianceName.php",
+            method: "POST",
+            data: {applianceID:applianceID,applianceName:applianceName},
+            success: function(){
+                location.reload();
+            }
+        })
+    }
+}
+
+//remove appliance
+function removeAppliance(applianceID)
+{
+    $.ajax({
+        url: "queries/removeAppliance.php",
+        method: "POST",
+        data: {applianceID:applianceID},
+        success: function(){
+            location.reload();
+        }
+    })
 }
 
 //display calibration modal
-function calibrateCount(applianceID,applianceName)
+function calibrateCount()
 {
     var applianceID = document.getElementById("calAppID").value;
     var count = 3;
@@ -306,7 +318,7 @@ function calibrateCount(applianceID,applianceName)
                 $.ajax({
                     url: "queries/setRating.php",
                     method: "POST",
-                    data: {applianceID,applianceID},
+                    data: {applianceID:applianceID},
                     dataType: 'JSON',
                     success: function(result){
                         document.getElementById("calMessage").innerHTML = '&nbsp;&nbsp;Average Power: '+result.avg+' W<br>&nbsp;&nbsp;Upper Control Limit: '+result.UCL+' W<br>&nbsp;&nbsp;Lower Control Limit: '+result.LCL+' W';
@@ -329,6 +341,7 @@ function scheduleDisplayModal(applianceID,applianceName)
     document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
     $('#calibrateModal').modal('show')
 }
+
 function gago(){
     alert("sdadsa");
 }

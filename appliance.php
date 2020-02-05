@@ -4,8 +4,9 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" lang="en">
-  <!--<![endif]-->
-  <body>
+<!--<![endif]-->
+
+<body>
     <?php 
 include "sessions.php";
 include "databaseConnection.php";
@@ -14,34 +15,50 @@ $userType = $_SESSION['userType'];
 $userID = $_SESSION['userID'];
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
-    <div class="dashboard-wrapper">
-      <div class="container-fluid dashboard-content ">
-        <div class="card">
-          <div class="card-body">
-            <table class="table table-bordered table-responsive-md table-striped text-center">
-              <thead>
-                <col width="60">
-                <col width="250">
-                <col width="90">
-                <col width="60">
-                <col width="200">
-                <tr>
-                  <th class="text-center">Number
-                  </th>
-                  <th class="text-center">Appliance Name
-                  </th>
-                  <th colspan="2" class="text-center">Average Power
-                  </th>
-                  <th class="text-center">Status
-                  </th>
-                  <th class="text-center">Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php 
+        <div class="dashboard-wrapper">
+            <div class="container-fluid dashboard-content ">
+                <div class="card">
+                    <div class="card-body">
+                        <?php
+$query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NULL";
+$getApplianceList=$conn->prepare($query);
+$getApplianceList->execute();
+if($getApplianceList->rowCount() > 0){
+  echo '  <span class="table-add float-left mb-3 mr-2">
+  <a data-toggle="modal" href="#addApplianceModal" class="text-success">
+    <i
+       class="fas fa-plus" aria-hidden="true">
+    </i>
+  </a>  Add Appliance
+</span>';
+}?>
+                            <table class="table table-bordered table-responsive-md table-striped text-center">
+                                <thead>
+                                    <col width="60">
+                                        <col width="200">
+                                            <col width="60">
+                                                <col width="90">
+                                                    <col width="60">
+                                                        <col width="200">
+                                                            <tr>
+                                                                <th class="text-center">Port
+                                                                </th>
+                                                                <th class="text-center" colspan="2">Appliance Name
+                                                                </th>
+                                                                <th colspan="2" class="text-center">Average Power
+                                                                </th>
+                                                                <th class="text-center">Status
+                                                                </th>
+                                                                <th class="text-center">Actions
+                                                                </th>
+                                                                <th class="text-center">Remove
+                                                                </th>
+                                                            </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
 $count = 1;
-$query = "SELECT * FROM `tbl_appliances`";
+$query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NOT NULL";
 $getApplianceList=$conn->prepare($query);
 $getApplianceList->execute();
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
@@ -81,63 +98,133 @@ $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td
 }
 }
 if($applianceList['applianceRating'] <= 0){
-  $powerConsumption = "NC";
+  $powerConsumption = "Not Calibrated";
 }else{
   $powerConsumption = $applianceList['applianceRating']." W";
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
-<td>'.$applianceList['applianceName'].'</td>
+<td>'.$applianceList['applianceName'].'</td><td><button class="btn" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-edit"></i></button></td>
 <td>'.$powerConsumption.'</td><td><button class="btn" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-cogs"></i></button></td>
-'.$deviceStatus.'
+'.$deviceStatus.'<td>
+<a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].')"href="#" class="text-danger">
+<i class="fas fa-minus" aria-hidden="true"></i>
+</td>
 </tr>';
 }
 ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <!-- calibrate modal -->
-      <div id="calibrateModal" class="modal fade bd-example-modal-sm" role="dialog">
-  <div class="modal-dialog modal-sm">
-
-    <!-- Modal content-->
-    <input type="hidden" value="" id="calAppID">
-    <input type="hidden" value="" id="calAppName">
-    <div class="modal-content">
-      <div class="modal-header">
-       <h4>Calibrate <span id="calAppliance"></span></h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-  
-      </div>
-      <div class="modal-body">
-        <p><span id="calMessage">Turn On Appliance Before Calibrating</span></p>
-      <div class="modal-body" id="calibrateCountdown">
-        <button class="btn btn-primary" onclick="calibrateCount()"><span id="calText"></span></button>
-    </div>
-
-  </div>
-</div>
-<!-- end calibrate modal -->
-      <!-- edit schedule modal -->
-      <div class="modal fade" id="editApplianceModal" role="dialog">
-        <div class="modal-dialog">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Edit Appliance
-              </h4>
-              <button type="button" class="close" data-dismiss="modal">&times;
-              </button>
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-              <input type="text" class="form-control" id="applianceName" placeholder="">
-              <input type="hidden" value="">
+            <!-- calibrate modal -->
+            <div id="calibrateModal" class="modal fade bd-example-modal-sm" role="dialog">
+                <div class="modal-dialog modal-sm">
+
+                    <!-- Modal content-->
+                    <input type="hidden" value="" id="calAppID">
+                    <input type="hidden" value="" id="calAppName">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Calibrate <span id="calAppliance"></span></h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                        </div>
+                        <div class="modal-body">
+                            <p><span id="calMessage">Turn On Appliance Before Calibrating</span></p>
+                            <div class="modal-body" id="calibrateCountdown">
+                                <button class="btn btn-primary" onclick="calibrateCount()"><span id="calText"></span></button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="button" id="applianceID" value="" class="btn btn-default" data-dismiss="modal" onclick = "changeApplianceName(this.value,document.getElementById('applianceName').placeholder)">Save
-            </button>
-          </div>
-        </div>
-      </div>
-      </body>
-    </html>
+            <!-- end calibrate modal -->
+            <!-- edit appliance modal -->
+            <div id="editApplianceModal" class="modal fade bd-example-modal-sm" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <!-- Modal content-->
+                    <input type="hidden" value="" id="editAppID">
+                    <input type="hidden" value="" id="editAppName">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Edit Appliance<span id="calAppliance"></span></h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="input-group input-group-round">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                        <i class="fas fa-plug">
+                        </i>
+                      </span>
+                                    </div>
+                                    <input type="text" class="form-control filter-list-input" maxlength="20" id="editedApplianceName" value="" placeholder="Enter Appliance Name">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="editApplianceName()">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end edit appliance modal -->
+                        <!-- edit appliance modal -->
+                        <div id="addApplianceModal" class="modal fade bd-example-modal-sm" role="dialog">
+                <div class="modal-dialog modal-sm">
+
+                    <!-- Modal content-->
+                    <input type="hidden" value="" id="editAppID">
+                    <input type="hidden" value="" id="editAppName">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Add Appliance</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                            <label>Name</label>
+                                <div class="input-group input-group-round">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                        <i class="fab fa-medapps">
+                        </i>
+                      </span>
+                                    </div>
+                                    <input type="text" class="form-control filter-list-input" maxlength="20" id="addApplianceName" value="" placeholder="Appliance Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            <label>Port</label>
+                                <div class="input-group input-group-round">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                        <i class="fas fa-plug">
+                        </i>
+                      </span>
+                                    </div>
+                                        <select class="form-control" id="portNum" onchange="displaySchedForm()">
+                                    <?php
+                                    $query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NULL";
+                                    $getApplianceList=$conn->prepare($query);
+                                    $getApplianceList->execute();
+                                      while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
+                                      {
+                                          echo '<option value="'.$applianceList['applianceID'].'">'.$applianceList['applianceID'].'</option>';
+                                      }?>
+                                      </select>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="addAppliance()">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end edit appliance modal -->
+</body>
+</html>
