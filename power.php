@@ -23,7 +23,7 @@ include_once "navigator.php";
                     <?php
                     $currentPage = basename($_SERVER['PHP_SELF']);
                     $count = 1;
-                    $query = "SELECT * FROM `tbl_appliances`";
+                    $query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NOT NULL";
                     $getApplianceList=$conn->prepare($query);
                     $getApplianceList->execute();
                     while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
