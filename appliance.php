@@ -51,8 +51,10 @@ if($getApplianceList->rowCount() > 0){
                                                                 </th>
                                                                 <th class="text-center">Actions
                                                                 </th>
-                                                                <th class="text-center">Remove
-                                                                </th>
+                                                                <?php
+                                                                if($userID == 0){
+                                                                    echo '<th class="text-center">Remove</th>';
+                                                                }?>
                                                             </tr>
                                 </thead>
                                 <tbody>
@@ -102,12 +104,15 @@ if($applianceList['applianceRating'] <= 0){
 }else{
   $powerConsumption = $applianceList['applianceRating']." W";
 }
+if($userID == 0){
+    $deviceStatus .= '<td>
+    <a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].')"href="#" class="text-danger">
+    <i class="fas fa-minus" aria-hidden="true"></i>';
+}
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td><td><button class="btn" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-edit"></i></button></td>
 <td>'.$powerConsumption.'</td><td><button class="btn" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-cogs"></i></button></td>
-'.$deviceStatus.'<td>
-<a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].')"href="#" class="text-danger">
-<i class="fas fa-minus" aria-hidden="true"></i>
+'.$deviceStatus.'
 </td>
 </tr>';
 }

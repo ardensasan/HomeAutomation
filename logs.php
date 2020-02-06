@@ -48,7 +48,7 @@ include_once "databaseConnection.php";
                                             $action2 = "Webpage";
                                             $exec = $applianceName['FullName'];
                                         } elseif ($applianceName['logVia'] == 1) {
-                                            $action2 = "Manual";
+                                            $action2 = "Push Button";
                                             $exec = "NA";
                                         } elseif ($applianceName['logVia'] == 3) {
                                             $action2 = "Schedule";

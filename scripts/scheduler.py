@@ -37,7 +37,7 @@ while True:
                     connection.commit()
                     cursor.close()
                     cursor = connection.cursor()
-                    cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia) VALUES (%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,0,2))
+                    cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,0,2,1))
                     connection.commit()	
                     cursor.close()
                     subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
@@ -51,7 +51,7 @@ while True:
                     connection.commit()
                     cursor.close()
                     cursor = connection.cursor()
-                    cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia) VALUES (%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,1,2))
+                    cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,1,2,1))
                     connection.commit()
                     cursor.close()
                     subprocess.call(['python3', '/var/www/html/scripts/turnON.py', str(applianceOutputPin),])
@@ -69,7 +69,7 @@ while True:
                             connection.commit()
                             cursor.close()
                             cursor = connection.cursor()
-                            cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia) VALUES (%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,0,2))
+                            cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,0,2,1))
                             connection.commit() 
                             cursor.close()
                             subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
@@ -79,13 +79,13 @@ while True:
                             connection.commit()
                             cursor.close()
                             cursor = connection.cursor()
-                            cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia) VALUES (%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,1,2))
+                            cursor.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",(dateToday+" "+timeToday,applianceName,1,2,1))
                             connection.commit()
                             cursor.close()
                             subprocess.call(['python3', '/var/www/html/scripts/turnON.py', str(applianceOutputPin),])
 
     result.close()
-    time.sleep(35)
+time.sleep(10)
 
 
 
