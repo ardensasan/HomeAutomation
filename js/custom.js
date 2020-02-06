@@ -191,15 +191,64 @@ function displaySchedForm(){
 //add schedule
 function addSchedule()
 {
-    alert("se");
-    // $.ajax({
-    //     url: "queries/addSchedule.php",
-    //     method: "POST",
-    //     data: {scheduleDate: scheduleDate,scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction},
-    //     success: function(){
-    //         location.reload();
-    //     }
-    // })
+    var scheduleRepeat = "";
+    var schedType = document.getElementById("schedType").value;
+    var scheduleDate = document.getElementById("scheduleDate").value;
+    var scheduleTime = document.getElementById("scheduleTime").value;
+    var scheduleApplianceID = document.getElementById("applianceSelect").value;
+    var scheduleAction =  document.getElementById("scheduleAction").value;
+    if(schedType == 1){
+        scheduleRepeat = null;
+    }else{
+        scheduleDate = null;
+        if(document.getElementById("dayM").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayT").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayW").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayTh").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayF").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("daySa").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("daySun").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+    }
+    if(scheduleRepeat == "0000000"){
+        alert("Please choose a day to repeat");
+    }else{
+        $.ajax({
+            url: "queries/addSchedule.php",
+            method: "POST",
+            data: {scheduleDate: scheduleDate,scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction,scheduleRepeat:scheduleRepeat},
+            success: function(){
+                location.reload();
+            }
+        })
+    }
 }
 
 //check use login credentials
