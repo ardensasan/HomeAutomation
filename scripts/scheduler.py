@@ -26,6 +26,7 @@ while True:
         scheduleRepeat = row[6];
         scheduleID = row[7];
         if scheduleRepeat == None:
+            print("ww");
             if scheduleDate == dateToday and scheduleTime == timeToday:
                 if scheduleAction == 0:
                     cursor = connection.cursor()

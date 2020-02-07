@@ -10,10 +10,10 @@ connection = mysql.connector.connect(
   passwd="abaynfriends",
   database="homeautomation"
 )
-A1 = 40;
-A2 = 38;
-A3 = 36;
-A4 = 32;
+A1 = 37;
+A2 = 35;
+A3 = 33;
+A4 = 31;
 #set pins with pullup resistors
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(A1,GPIO.IN,pull_up_down=GPIO.PUD_UP)
@@ -26,17 +26,21 @@ GPIO.setup(A4,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 def turnONOFF(channel):
     dateTime = datetime.datetime.now()
+    applianceStatus = 3;
+    applianceID = 0;
+    applianceOutputPin = 100;
+    applianceName  = "aw";
     #appliance 1
     if channel==A1:
-
         result = connection.cursor()
-        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = %s AND WHERE applianceName != %s AND WHERE applianceStatus != %s",(A1,NULL,3))
+        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = 37 AND applianceName IS NOT NULL AND applianceStatus != 3")
         for x in result:
             applianceID = x[0];
             applianceName = x[1];
             applianceStatus = x[2];
             applianceOutputPin = x[3];
         result.close()
+        print(applianceStatus);
         if applianceStatus == 0:
             cursor = connection.cursor()
             cursor.execute("UPDATE tbl_appliances SET applianceStatus = 1 WHERE applianceID = %s",(applianceID,))
@@ -48,6 +52,7 @@ def turnONOFF(channel):
             cursor.close()
             subprocess.call(['python3', '/var/www/html/scripts/turnON.py', str(applianceOutputPin),])
         if applianceStatus == 1:
+            print("port11");
             cursor = connection.cursor()
             cursor.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
             connection.commit()
@@ -60,7 +65,7 @@ def turnONOFF(channel):
     #appliance 2
     if channel==A2:
         result = connection.cursor()
-        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = %s AND WHERE applianceName != %s AND WHERE applianceStatus != %s",(A2,NULL,3))
+        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = 35 AND applianceName IS NOT NULL AND applianceStatus != 3")
         for x in result:
             applianceID = x[0];
             applianceName = x[1];
@@ -90,7 +95,7 @@ def turnONOFF(channel):
     #appliance 3
     if channel==A3:
         result = connection.cursor()
-        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = %s AND WHERE applianceName != %s AND WHERE applianceStatus != %s",(A3,NULL,3))
+        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = 33 AND applianceName IS NOT NULL AND applianceStatus != 3")
         for x in result:
             applianceID = x[0];
             applianceName = x[1];
@@ -120,7 +125,7 @@ def turnONOFF(channel):
     #appliance 4
     if channel==A4:
         result = connection.cursor()
-        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = %s AND WHERE applianceName != %s AND WHERE applianceStatus != %s",(A4,NULL,3))
+        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = 31 AND applianceName IS NOT NULL AND applianceStatus != 3")
         for x in result:   
             applianceID = x[0];
             applianceName = x[1];
