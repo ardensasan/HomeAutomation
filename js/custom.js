@@ -391,6 +391,16 @@ function scheduleDisplayModal(applianceID,applianceName)
     $('#calibrateModal').modal('show')
 }
 
-function gago(){
-    alert("sdadsa");
+//refresh appliance page
+
+function refreshAppliancePage(){
+    $.ajax({
+        url: "queries/applianceDisplay.php",
+        success: function(display){
+            $("#applianceDisplay").html(display);
+        }
+    });
+}
+function test(){
+    alert("test")
 }

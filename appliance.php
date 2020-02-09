@@ -57,8 +57,8 @@ if($getApplianceList->rowCount() > 0){
                                                                 }?>
                                                             </tr>
                                 </thead>
-                                <tbody>
-                                    <?php 
+                                <tbody id="applianceDisplay">
+                                <?php 
 $count = 1;
 $query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NOT NULL";
 $getApplianceList=$conn->prepare($query);
@@ -231,5 +231,12 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
                 </div>
             </div>
             <!-- end edit appliance modal -->
+            <script>
+var myVar = setInterval(refreshTable, 1000);
+
+function refreshTable() {
+    refreshAppliancePage();
+}
+</script>
 </body>
 </html>
