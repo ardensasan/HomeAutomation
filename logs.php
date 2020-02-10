@@ -50,7 +50,7 @@ include_once "databaseConnection.php";
                                         } elseif ($applianceName['logVia'] == 1) {
                                             $action2 = "Push Button";
                                             $exec = "NA";
-                                        } elseif ($applianceName['logVia'] == 3) {
+                                        } elseif ($applianceName['logVia'] == 2) {
                                             $action2 = "Schedule";
                                             $exec = "NA";
                                         }

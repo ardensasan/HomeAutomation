@@ -3,13 +3,8 @@ import Adafruit_ADS1x15
 import math
 import mysql.connector
 import datetime
-connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
-adc = Adafruit_ADS1x15.ADS1115(address=0x49)
+
+adc = Adafruit_ADS1x15.ADS1115(address=0x48)
 adc1 = Adafruit_ADS1x15.ADS1115(address=0x49)
 adc.data_rate = 860;
 adc1.data_rate = 860;
@@ -31,6 +26,12 @@ def getVoltage(value):
     return value;
 
 def saveReadings(current,voltage,applianceID):
+    connection = mysql.connector.connect(
+  host="localhost",
+  user="abaynfriends",
+  passwd="abaynfriends",
+  database="homeautomation"
+)
     dateLimit = datetime.datetime.now()-datetime.timedelta(minutes=10);
     dateTime = datetime.datetime.now();
     dateLimit = dateLimit.replace(microsecond=0);
@@ -97,4 +98,5 @@ while True:
     saveReadings(A2,V2,3);
     saveReadings(A3,V3,4);
     
+    print(A1,V1)
     time.sleep(1)
