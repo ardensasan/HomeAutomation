@@ -2,7 +2,8 @@
 include "../databaseConnection.php";
 $rArray = array();
 $applianceID = $_POST['applianceID'];
-$query = "SELECT applianceID,rCurrent,rVoltage,DATE_FORMAT(rDateTime, '%H:%i:%s') as T FROM `tbl_readings` WHERE `applianceID` = ? ORDER BY `rDateTime` DESC LIMIT 20";
+$limit = $_POST['limit'];
+$query = "SELECT applianceID,rCurrent,rVoltage,DATE_FORMAT(rDateTime, '%H:%i:%s') as T FROM `tbl_readings` WHERE `applianceID` = ? ORDER BY `rDateTime` DESC LIMIT $limit";
 $getApplianceReadings = $conn->prepare($query);
 $getApplianceReadings->execute([$applianceID]);
 $applianceID = 0;

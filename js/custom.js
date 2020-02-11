@@ -392,7 +392,6 @@ function scheduleDisplayModal(applianceID,applianceName)
 }
 
 //refresh appliance page
-
 function refreshAppliancePage(){
     $.ajax({
         url: "queries/applianceDisplay.php",
@@ -401,6 +400,33 @@ function refreshAppliancePage(){
         }
     });
 }
+
+//change graph according to port display
+function changeGraph(applianceID){
+    var i;
+    for (i = 1; i < 5; i++) {
+        if(document.getElementById("portButton"+i)){
+            if(applianceID == i){
+                document.getElementById("portButton"+i).className = 'btn btn-primary';
+            }else{
+                document.getElementById("portButton"+i).className = 'btn btn-outline-primary';
+            }
+        }
+      }
+      $.ajax({
+        url: "queries/changeGraph.php",
+        method: "POST",
+        dataType: 'JSON',
+        data: {applianceID:applianceID},
+        success: function(result){
+            document.getElementById("portNumberText").innerHTML = applianceID+" : "+result.applianceName;
+            document.getElementById("portName").value = result.applianceName;
+            document.getElementById("portNumber").value = applianceID;
+            document.getElementById("portNumberReadings").innerHTML = " [ "+result.voltage+" V | "+result.current +"A ]";
+        }
+    })
+}
+
 function test(){
     alert("test")
 }
