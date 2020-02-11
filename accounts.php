@@ -9,7 +9,6 @@
   <?php 
 include "sessions.php";
 include_once "navigator.php";
-include "databaseConnection.php";
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
     <div class="dashboard-wrapper">

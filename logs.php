@@ -2,7 +2,6 @@
 <?php
 include "sessions.php";
 include_once "navigator.php";
-include_once "databaseConnection.php";
 ?>
 <body>
     <!-- content -->

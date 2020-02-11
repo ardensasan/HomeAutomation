@@ -16,7 +16,6 @@ $year = date('Y');
 $date = $month . "/" . $day . "/" . $year;
 $currentPage = basename($_SERVER['PHP_SELF']);
 $hasRecord = "";
-
 ?>
 <div class="dashboard-wrapper">
 <div class="container-fluid dashboard content">
