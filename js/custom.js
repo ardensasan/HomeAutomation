@@ -296,6 +296,16 @@ function calibrateDisplay(applianceID,applianceName)
 //edit appliance name modal
 function editApplianceDisplay(applianceID,applianceName)
 {
+    document.getElementById("editPortNum").innerHTML = "";
+        $.ajax({
+        url: "queries/changePort.php",
+        method: "POST",
+        data: {applianceID:applianceID},
+        success: function(a){
+            $('#editPortNum').append(a); 
+            $("#editPortNum").val(applianceID);
+        }
+    })
     document.getElementById("editAppID").value = applianceID;
     document.getElementById("editedApplianceName").value = applianceName;
     document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
@@ -305,15 +315,17 @@ function editApplianceDisplay(applianceID,applianceName)
 //edit appliance name
 function editApplianceName()
 {
-    var applianceID = document.getElementById("editAppID").value
+    var applianceID = document.getElementById("editAppID").value;
     var applianceName = document.getElementById("editedApplianceName").value;
+    var appliancePort = document.getElementById("editPortNum").value;
+    alert(appliancePort);
     if(applianceName == ""){
         alert("Please enter an appliance name");
     }else{
         $.ajax({
             url: "queries/editApplianceName.php",
             method: "POST",
-            data: {applianceID:applianceID,applianceName:applianceName},
+            data: {applianceID:applianceID,applianceName:applianceName,appliancePort: appliancePort},
             success: function(){
                 location.reload();
             }

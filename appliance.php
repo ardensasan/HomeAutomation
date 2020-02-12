@@ -167,6 +167,20 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
                                     </div>
                                     <input type="text" class="form-control filter-list-input" maxlength="20" id="editedApplianceName" value="" placeholder="Enter Appliance Name">
                                 </div>
+                                </div>
+                                <div class="form-group">
+                            <label>Port</label>
+                                <div class="input-group input-group-round">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                        <i class="fas fa-plug">
+                        </i>
+                      </span>
+                                    </div>
+                                        <select class="form-control" id="editPortNum" onchange="displaySchedForm()">
+                                    <div id="portOptions">
+                                      </select>
+                            </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" onclick="editApplianceName()">Confirm</button>
