@@ -318,7 +318,6 @@ function editApplianceName()
     var applianceID = document.getElementById("editAppID").value;
     var applianceName = document.getElementById("editedApplianceName").value;
     var appliancePort = document.getElementById("editPortNum").value;
-    alert(appliancePort);
     if(applianceName == ""){
         alert("Please enter an appliance name");
     }else{
