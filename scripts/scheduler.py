@@ -68,6 +68,7 @@ while True:
                     connection.commit()
                     cursor.close()
                     subprocess.call(['python3', '/var/www/html/scripts/turnON.py', str(applianceOutputPin),])
+                    
         else:
             #execute repeated schedule
             count = -1;

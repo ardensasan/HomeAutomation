@@ -186,11 +186,7 @@ echo '<option value ="'.$applianceList['applianceID'].'">'.$applianceList['appli
                 </option>
                 <option value ="1">Turn On
                 </option>
-                <option value ="2">Enable
-                </option>
-                <option value ="3">Disable
-                </option>
-              </select>
+               </select>
           </div>    
           <!-- select appliance action end-->
                       <!-- checkboxes for days -->

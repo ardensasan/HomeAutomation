@@ -51,7 +51,7 @@ $portName = "";
   </div>
 </div>
 <script>
-var myVar = setInterval(refreshTable, 100);
+var myVar = setInterval(refreshTable, 1000);
 function refreshTable() {
   var portNumber = document.getElementById("portNumber").value;
   var limit = 20;

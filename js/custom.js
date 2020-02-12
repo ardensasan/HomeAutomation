@@ -344,8 +344,7 @@ function addAppliance()
             url: "queries/addAppliance.php",
             method: "POST",
             data: {applianceID:applianceID,applianceName:applianceName},
-            success: function(a){
-                alert(a);
+            success: function(){
                 location.reload();
             }
         })
@@ -353,12 +352,12 @@ function addAppliance()
 }
 
 //remove appliance
-function removeAppliance(applianceID)
+function removeAppliance(applianceID,applianceOutputPin)
 {
     $.ajax({
         url: "queries/removeAppliance.php",
         method: "POST",
-        data: {applianceID:applianceID},
+        data: {applianceID:applianceID,applianceOutputPin:applianceOutputPin},
         success: function(){
             location.reload();
         }

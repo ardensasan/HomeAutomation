@@ -52,7 +52,7 @@ if($applianceList['applianceRating'] <= 0){
 }
 if($userID == 0){
     $deviceStatus .= '<td>
-    <a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].')"href="#" class="text-danger">
+    <a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].',\''.$applianceList['applianceOutputPin'].'\')"href="#" class="text-danger">
     <i class="fas fa-minus" aria-hidden="true"></i>';
 }
 
