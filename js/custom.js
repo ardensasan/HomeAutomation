@@ -341,10 +341,11 @@ function addAppliance()
         alert("Please enter an appliance name");
     }else{
         $.ajax({
-            url: "queries/editApplianceName.php",
+            url: "queries/addAppliance.php",
             method: "POST",
             data: {applianceID:applianceID,applianceName:applianceName},
-            success: function(){
+            success: function(a){
+                alert(a);
                 location.reload();
             }
         })
