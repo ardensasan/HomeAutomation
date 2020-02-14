@@ -57,8 +57,8 @@ if($userID == 0){
 }
 
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
-<td>'.$applianceList['applianceName'].'</td><td><button class="btn" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-edit"></i></button></td>
-<td>'.$powerConsumption.'</td><td><button class="btn" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-cogs"></i></button></td>
+<td>'.$applianceList['applianceName'].'</td><td><button class="btn" title="Edit Appliance" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-edit"></i></button></td>
+<td>'.$powerConsumption.'</td><td><button class="btn" title="Calibrate Appliance" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>
 '.$deviceStatus.'
 </td>
 </tr>';

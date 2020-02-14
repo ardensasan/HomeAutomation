@@ -64,7 +64,7 @@ $getApplianceList=$conn->prepare($query);
 $getApplianceList->execute();
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
 {
-  $name = $applianceList['applianceName'];
+$name = $applianceList['applianceName'];
 if($applianceList['applianceStatus'] == 0){
 $deviceStatus = '<td><h4><span class="badge badge-danger">Turned Off</span></h4></td>
 <td><span class="table-remove"><button type="button"
@@ -109,8 +109,8 @@ if($userID == 0){
     <i class="fas fa-minus" aria-hidden="true"></i>';
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
-<td>'.$applianceList['applianceName'].'</td><td><button class="btn" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-edit"></i></button></td>
-<td>'.$powerConsumption.'</td><td><button class="btn" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-cogs"></i></button></td>
+<td>'.$applianceList['applianceName'].'</td><td><button class="btn" title="Edit Appliance" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-edit"></i></button></td>
+<td>'.$powerConsumption.'</td><td><button class="btn" title="Calibrate Appliance" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i title="Calibrate" class="fas fa-cogs"></i></button></td>
 '.$deviceStatus.'
 </td>
 </tr>';

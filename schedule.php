@@ -167,9 +167,12 @@ $repeat .= " Sun ";
               </label>
               <select class="form-control" id="applianceSelect">
                 <?php
-$query = "SELECT `applianceName`,`applianceID` from `tbl_appliances` WHERE `applianceName` IS NOT NULL";
+$query = "SELECT `applianceName`,`applianceID` from `tbl_appliances` WHERE `applianceName` IS NOT NULL AND `applianceStatus` != ?";
 $getApplianceList=$conn->prepare($query);
-$getApplianceList->execute();
+$getApplianceList->execute([2]);
+if($getApplianceList->rowCount() == 0){
+  echo '<option value ="0">No Available Appliance</option>';
+}
 while ($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC)) {
 echo '<option value ="'.$applianceList['applianceID'].'">'.$applianceList['applianceName'].'</option>';
 }
@@ -235,7 +238,11 @@ echo '<option value ="'.$applianceList['applianceID'].'">'.$applianceList['appli
       </div>
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="addSchedule()">Add Schedule</button>
+      <?php if($getApplianceList->rowCount() == 0){
+  echo '<button type="button" disabled class="btn btn-primary" onclick="addSchedule()">Add Schedule</button>';
+}else{
+    echo '<button type="button" class="btn btn-primary" onclick="addSchedule()">Add Schedule</button>';
+}?>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
       </div>
     </div>

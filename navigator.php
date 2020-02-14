@@ -22,8 +22,8 @@
 </head>
 <?php
 const ADMIN = 0;
-$FullName = $_SESSION['userFullName'];
-$UserType = $_SESSION['userType'];
+$userID = $_SESSION['userID'];
+$userType = $_SESSION['userType'];
 include "sessions.php";
 include "databaseConnection.php";
 $currentPage = basename($_SERVER['PHP_SELF']);
@@ -38,7 +38,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="index.html">ABAY HOME</a>
+                <a class="navbar-brand" href="dashboard.php">ABAY HOME</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -46,49 +46,16 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     <ul class="navbar-nav ml-auto navbar-right-top">
                         </li>
                         <li class="nav-item dropdown connection">
-                        <a class="nav-link nav-icons" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-fw fa-bell"></i> <span class="indicator"></span></a>
+                        <a class="nav-link nav-icons" href="#" onclick="displayNotif(<?php echo $userID;?>)" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-fw fa-bell"></i> <span id="notifIndicator"></span></a>
                         <ul class="dropdown-menu dropdown-menu-right notification-dropdown">
-                                <li>
+                                <li >
                                     <div class="notification-title"> Notification</div>
-                                    <div class="notification-list">
-                                        <div class="list-group">
-                                            <a href="#" class="list-group-item list-group-item-action active">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-2.jpg" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">Jeremy Rakestraw</span>accepted your invitation to join the team.
-                                                        <div class="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-3.jpg" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">John Abraham</span>is now following you
-                                                        <div class="notification-date">2 days ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-4.jpg" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">Monaan Pechi</span> is watching your main repository
-                                                        <div class="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-5.jpg" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">Jessica Caruso</span>accepted your invitation to join the team.
-                                                        <div class="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
+                                    <div id="notifList">
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="list-footer"> <a href="#">View all notifications</a></div>
+                                    <div id="viewNotif">
+                                    </div>
                                 </li>
                             </ul>
                         </li>
@@ -97,7 +64,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                                 <div class="nav-user-info">
                                     <h5 class="mb-0 text-white nav-user-name"></h5>
-                                    <span class="status"></span><span class="ml-2"><?php if($UserType == ADMIN){
+                                    <span class="status"></span><span class="ml-2"><?php if($userType == ADMIN){
                                         echo "Admin</div>";
                                         echo '<a class="dropdown-item" href="accounts.php"><i class="fas fa-user mr-2"></i>Accounts</a>';
                                     }else{
@@ -149,6 +116,32 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
     </div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+    <script>
+    var myVar = setInterval(refreshNotif, 1000);
+    function refreshNotif() {
+        checkNotif(<?php echo $userID; ?>);
+        }
+</script>
     <!-- ============================================================== -->
     <!-- end main wrapper  -->
     <!-- ============================================================== -->

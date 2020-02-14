@@ -437,7 +437,50 @@ function changeGraph(applianceID){
         }
     })
 }
+//check for notifications
+function checkNotif(userID){ 
+    $.ajax({
+        url: "queries/checkNotif.php",
+        method: "POST",
+        data: {userID:userID},
+        success: function(result){
+            if(result == "0"){
+                document.getElementById("notifIndicator").classList.remove("indicator");
+            }else{
+                if(result > 3){
+                    document.getElementById("viewNotif").innerHTML = '<div class="list-footer" id="viewNotif"> <a href="#" onclick="test()">View all notifications</a></div>';
+                }
+                document.getElementById("notifIndicator").classList.add("indicator");
+            }
+        }
+    })
+}
 
+//display notifications
+function displayNotif(userID){
+    document.getElementById("notifList").innerHTML = "";
+    $.ajax({
+        url: "queries/displayNotif.php",
+        method: "POST",
+        data: {userID:userID},
+        success: function(result){
+            $('#notifList').append(result);
+        }
+    })
+}
+
+//display notification modal
+function displayNotifModal(userID){
+    $.ajax({
+        url: "queries/displayNotifDetails.php",
+        method: "POST",
+        data: {userID:userID},
+        success: function(result){
+            $('#notifList').append(result);
+        }
+    })
+    $('#myModal').modal('show');
+}
 function test(){
     alert("test")
 }

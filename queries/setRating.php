@@ -3,7 +3,7 @@ include "../databaseConnection.php";
 $applianceID = $_POST['applianceID'];
 $readings = array();
 $variance = 0.0;
-$query = "SELECT *FROM `tbl_readings` WHERE `applianceID` = ? ORDER BY rDateTime DESC LIMIT 3";
+$query = "SELECT *FROM `tbl_readings` WHERE `applianceID` = ? ORDER BY rDateTime DESC LIMIT 20";
 $getApplianceReadings = $conn->prepare($query);
 $getApplianceReadings->execute([$applianceID]);
 while($getReadings = $getApplianceReadings->fetch(PDO::FETCH_ASSOC)){
@@ -26,6 +26,11 @@ $readings = array();
 $stdDev =  (float)sqrt($variance/$num_of_elements);
 $UCL = $avgWatt + $stdDev*6;
 $LCL = $avgWatt - $stdDev*6;
+
+$query = "UPDATE `tbl_appliances` SET `UCL` = ?, `LCL` = ? WHERE `applianceID` = ?";
+$setApplianceRating = $conn->prepare($query);
+$setApplianceRating->execute([$UCL,$LCL,$applianceID]);
+
 $readings = array(
     "avg" => round($avgWatt,2),
     "stdDev" => round($stdDev,2),

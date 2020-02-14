@@ -23,7 +23,7 @@ while($applianceStatus = $getApplianceStatus->fetch(PDO::FETCH_ASSOC)){
 
 $query = "INSERT INTO `tbl_readings` (applianceID,rCurrent,rVoltage,rDateTime) VALUES (?,?,?,?)";
 $addReadigns= $conn->prepare($query);
-$addReadigns->execute([1,rand(8,10),rand(18,20),$date]);
+$addReadigns->execute([1,rand(9,10),rand(19,20),$date]);
 
 $query = "INSERT INTO `tbl_readings` (applianceID,rCurrent,rVoltage,rDateTime) VALUES (?,?,?,?)";
 $addReadigns= $conn->prepare($query);
