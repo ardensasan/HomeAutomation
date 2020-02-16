@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2020 at 03:13 PM
--- Server version: 10.4.8-MariaDB
--- PHP Version: 7.3.11
+-- Generation Time: Feb 16, 2020 at 11:56 AM
+-- Server version: 10.4.10-MariaDB
+-- PHP Version: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -93,7 +93,10 @@ CREATE TABLE `tbl_notifications` (
 --
 
 INSERT INTO `tbl_notifications` (`notifID`, `notifMessage`, `notifText`, `notifDateTime`) VALUES
-(1, 'WEWEWEWEWE', 'dasfjksdlhvgweiuqgwqkfwekj', '0000-00-00 00:00:00');
+(1, 'Notif1', 'wqeqw', '2020-02-15 23:05:00'),
+(2, 'Notif2', 'pagod na imong kanon giluto', '2020-02-16 13:00:00'),
+(3, 'Way Bugas', 'wala nay bugas nahibilin', '2020-02-16 03:00:00'),
+(4, 'Way Sud-an', 'walay sud-an dri gutom na kaayo', '2020-02-16 11:00:00');
 
 -- --------------------------------------------------------
 
@@ -106,16 +109,6 @@ CREATE TABLE `tbl_notification_status` (
   `notifID` int(11) NOT NULL,
   `notifStatus` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `tbl_notification_status`
---
-
-INSERT INTO `tbl_notification_status` (`notifUserID`, `notifID`, `notifStatus`) VALUES
-(0, 1, 0),
-(0, 1, 0),
-(0, 1, 0),
-(0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -690,7 +683,7 @@ CREATE TABLE `tbl_schedules` (
 --
 
 CREATE TABLE `tbl_users` (
-  `userID` int(2) NOT NULL,
+  `userID` int(4) NOT NULL,
   `userName` varchar(20) NOT NULL,
   `userPass` varchar(20) NOT NULL,
   `userProf` varchar(20) NOT NULL,
@@ -705,8 +698,8 @@ CREATE TABLE `tbl_users` (
 --
 
 INSERT INTO `tbl_users` (`userID`, `userName`, `userPass`, `userProf`, `userType`, `userFirstName`, `userLastName`, `userPhoneNumber`) VALUES
-(0, 'abay', 'abay', '', 0, 'Ian Joseph', 'Solon', '9956139395'),
-(1, 'znarf', 'znarf', '', 1, 'Franz Dink', 'Catalan', '9999999999');
+(1, 'znarf', 'znarf', '', 1, 'Franz Dink', 'Catalan', '9999999999'),
+(2, 'abay', 'abay', '', 0, 'Ian Joseph', 'Solon', '9956139395');
 
 --
 -- Indexes for dumped tables
@@ -767,6 +760,12 @@ ALTER TABLE `tbl_logs`
   MODIFY `logID` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `tbl_notifications`
+--
+ALTER TABLE `tbl_notifications`
+  MODIFY `notifID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `tbl_schedules`
 --
 ALTER TABLE `tbl_schedules`
@@ -776,7 +775,7 @@ ALTER TABLE `tbl_schedules`
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `userID` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `userID` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
