@@ -116,26 +116,46 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
     </div>
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
+<!-- Notifaciont Details Modal -->
+<div id="notifDetails" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
+        <span id = "notifMessage"></span>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <p id = "notifText"></p>
+      </div>
+      <div class="modal-footer" id="notifFooter">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Notifaciont Details Modal  End-->
+
+<!-- Display all notifications modal -->
+<div id="displayAllNotif" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Notifications List</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="allNotif">
+
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
-
   </div>
 </div>
+<!-- Display all notifications modal end -->
     <script>
     var myVar = setInterval(refreshNotif, 1000);
     function refreshNotif() {

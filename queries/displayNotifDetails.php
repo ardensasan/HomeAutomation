@@ -1,29 +1,19 @@
 <?php
 include "../databaseConnection.php";
+$notifID = $_POST['notifID'];
 $userID = $_POST['userID'];
-$query = "SELECT *FROM `tbl_notifications` WHERE `notifUserID` = ? AND `notifStatus` = ? ORDER BY `notifDateTime` DESC LIMIT 3";
+$notifDetails = array();
+$query = "SELECT *FROM `tbl_notifications` WHERE `notifID` = ?";
 $getNotifs=$conn->prepare($query);
-$getNotifs->execute([$userID,0]);
-if($getNotifs->rowCount() == 0) {
-    echo '<a href="#" class="list-group-item list-group-item-primary">
-    <div class="notification-info">
-        <div> No Notifications
-        </div>
-    </div>
-</a>';
-}else{
-    while($notifs = $getNotifs->fetch(PDO::FETCH_ASSOC)){
-        if($notifs['notifStatus'] == 0){
-            $messageClass = '<a href="#" onclick="displayNotifModal()" class="list-group-item list-group-item-primary">';
-        }else{
-            $messageClass = '<a href="#" onclick="displayNotifModal()" class="list-group-item list-group-item-light">';
-        }
-        echo ''.$messageClass.'
-        <div class="notification-info">
-            <div> '.$notifs['notifMessage'].'
-            <div class="notification-date">2 min ago</div>
-            </div>
-        </div>
-        </a>';
-    }
+$getNotifs->execute([$notifID]);
+while($getNotifDetails = $getNotifs->fetch(PDO::FETCH_ASSOC))
+{
+    $notifDetails = array(
+        "notifText" => $getNotifDetails['notifText'],
+        "notifMessage" => $getNotifDetails['notifMessage']
+    );
 }
+$query = "UPDATE `tbl_notification_status` SET `notifStatus`= ? WHERE `notifUserID` = ? AND `notifID` = ?";
+$updateNotifStatus=$conn->prepare($query);
+$updateNotifStatus->execute([1,$userID,$notifID]);
+echo json_encode($notifDetails);

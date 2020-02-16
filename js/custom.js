@@ -443,14 +443,17 @@ function checkNotif(userID){
         url: "queries/checkNotif.php",
         method: "POST",
         data: {userID:userID},
+        dataType: 'JSON',
         success: function(result){
-            if(result == "0"){
+            if(result.unreadNum == "0"){
                 document.getElementById("notifIndicator").classList.remove("indicator");
             }else{
-                if(result > 3){
-                    document.getElementById("viewNotif").innerHTML = '<div class="list-footer" id="viewNotif"> <a href="#" onclick="test()">View all notifications</a></div>';
-                }
                 document.getElementById("notifIndicator").classList.add("indicator");
+            }
+            if(result.messageNum > 3){
+                document.getElementById("viewNotif").innerHTML = '<div class="list-footer" id="viewNotif"> <a href="#" onclick="displayAllNotif('+userID+')">View all notifications</a></div>';
+            }else{
+                document.getElementById("viewNotif").innerHTML = "";
             }
         }
     })
@@ -470,17 +473,51 @@ function displayNotif(userID){
 }
 
 //display notification modal
-function displayNotifModal(userID){
+function displayNotifModal(notifID,userID){
+    $('#displayAllNotif').modal('hide');
     $.ajax({
         url: "queries/displayNotifDetails.php",
         method: "POST",
-        data: {userID:userID},
+        data: {notifID:notifID,userID:userID},
+        dataType: 'JSON',
         success: function(result){
-            $('#notifList').append(result);
+            document.getElementById("notifText").innerHTML = result.notifText;
+            document.getElementById("notifMessage").innerHTML = result.notifMessage;
+            document.getElementById("notifFooter").innerHTML = '<button type="button" onclick="deleteNotif('+notifID+','+userID+',\'displayNotifDetails\')" class="btn btn-danger">Delete</button><button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
         }
     })
-    $('#myModal').modal('show');
+    $('#notifDetails').modal('show');
 }
+
+//delete notification
+function deleteNotif(notifID,userID,sender){
+    $.ajax({
+        url: "queries/deleteNotif.php",
+        method: "POST",
+        data: {notifID:notifID,userID:userID},
+        success: function(result){
+            $('#notifDetails').modal('hide');
+            if(sender == 'displayAllNotif'){
+                displayAllNotif(userID);
+            }
+           }
+    })
+}
+
+//display all notifications
+function displayAllNotif(userID){
+    document.getElementById("allNotif").innerHTML = "";
+    $.ajax({
+        url: "queries/displayAllNotif.php",
+        method: "POST",
+        data: {userID:userID},
+        success: function(result){
+            $('#allNotif').append(result); 
+        }
+    })
+    $('#displayAllNotif').modal('show');
+}
+
 function test(){
-    alert("test")
+    alert("notifID")
 }
