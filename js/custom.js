@@ -518,6 +518,44 @@ function displayAllNotif(userID){
     $('#displayAllNotif').modal('show');
 }
 
+//change consumption year
+function changeConsYear(){
+    var year = document.getElementById("yearSelect").value;
+    document.getElementById("consumptionYear").innerHTML = year;
+    document.getElementById("yearHeader").innerHTML = "Year "+year;
+    $.ajax({
+        url: "queries/totalConsumption.php",
+        method: "POST",
+        data: {year:year},
+        success: function(result){
+            document.getElementById("totalConsumption").innerHTML = result;
+            monthlyConsumption();
+        }
+    })
+}
+//monthly consumption
+function monthlyConsumption(){
+    var year = document.getElementById("yearSelect").value;
+    $.ajax({
+        url: "queries/monthlyConsumption.php",
+        method: "POST",
+        data: {year:year},
+        dataType: 'JSON',
+        success: function(result){
+            totalConsGraph.setData(result);
+        }
+    })
+}
+
+//calculate bill
+function calculateBill(){
+    var kiloWatt = document.getElementById("wattTotal").value;
+    var price = document.getElementById("wattPrice").value;
+    var bill = (kiloWatt*price).toFixed(2);
+    document.getElementById("totalPrice").value = bill+" Php";
+}
+
+//test
 function test(){
-    alert("notifID")
+    alert("This is a test")
 }

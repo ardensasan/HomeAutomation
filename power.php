@@ -32,7 +32,6 @@ $portName = "";
           $portNumber = $applianceList['applianceID'];
           $portName = $applianceList['applianceName'];
           echo '<a href="#" class="btn btn-primary" id="portButton'.$portNumber.'" onclick="changeGraph('.$portNumber.')">Port '.$portNumber.'</a>';
-      
       }else{
         echo '<a href="#" class="btn btn-outline-primary" id="portButton'.$applianceList['applianceID'].'" onclick="changeGraph('.$applianceList['applianceID'].')">Port '.$applianceList['applianceID'].'</a>';
       }     

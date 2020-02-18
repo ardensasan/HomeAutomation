@@ -11,191 +11,128 @@
 <?php 
 include "sessions.php";
 include_once "navigator.php";
+$yearList = array();
 ?>
 <div class="dashboard-wrapper">
-    <div class="container-fluid dashboard-content ">
-        <div class="card">
+  <div class="container-fluid dashboard-content">
+  <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#billCalculator">Bill Calculator</a>
+      <div class="card">
+        <div class="card-body">
+        <?php 
+            $query = "SELECT totalConsYear FROM tbl_totalconsumption";
+            $getConsumptionYear=$conn->prepare($query);
+            $getConsumptionYear->execute();
+            while($consumptionYear = $getConsumptionYear->fetch(PDO::FETCH_ASSOC))
+            {
+              if(in_array($consumptionYear['totalConsYear'],$yearList,FALSE) == FALSE){
+                array_push($yearList,$consumptionYear['totalConsYear']);
+              }
+            }
+           echo 'Year&nbsp;&nbsp;&nbsp;<select id="yearSelect" onchange="changeConsYear()">';
+            foreach($yearList as $year) {
+              echo '<option value ="'.$year.'">'.$year.'</option>';
+            }
+            ?>          
+          </select>
+          <div class="card">
+            <h5 class="card-header"><center><span id="yearHeader">Year 2020</span></center></h5>
+            <h5>Total Power Consumption for Year <b><span id="consumptionYear">2020</span></b> : <b><span id="totalConsumption">1000</span> KWh</b></h5>
             <div class="card-body">
-                <!-- ============================================================== -->
-                <!-- end pageheader -->
-                <!-- ============================================================== -->
-                    <div class="row">
-                    <?php
-                    $currentPage = basename($_SERVER['PHP_SELF']);
-                    $count = 1;
-                    $query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NOT NULL";
-                    $getApplianceList=$conn->prepare($query);
-                    $getApplianceList->execute();
-                    while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
-                    {?>
-                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                      <div class="card">
-                          <h5 class="card-header"><?php echo $applianceList['applianceName'] ?><span id="span<?php echo $count; ?>"></span></h5>
-                          <div class="card-body">
-                              <div id="applianceGraph<?php echo $count; ?>"></div>
-                          </div>
-                      </div>
-                  </div><?php
-                  $count++;
-                    }?>
-                    <div class="row">  
+               <div id="totalConsGraph"></div>
             </div>
-            </div>
+            <h5 class="card-header"><center>Month</center></h5>
+          </div>
         </div>
-    </div>
+      </div>
+  </div>
 </div>
-<script>
-function fetchdata(){
- $.ajax({
-  url: 'queries/getReadings.php',
-  type: 'post',
-  data: {applianceID: 1,limit: 20},
-  dataType: 'JSON',
-  success: function(data){
-   // Perform operation on return value     
-   applianceGraph1.setData(data);
-},
-  complete:function(data){
-   setTimeout(fetchdata,1000);
-  }
- });
- //appliance no 2
- $.ajax({
-  url: 'queries/getReadings.php',
-  type: 'post',
-  data: {applianceID: 2,limit: 20},
-  dataType: 'JSON',
-  success: function(data){
-   // Perform operation on return value     
-   applianceGraph2.setData(data);
-},
-  complete:function(data){
-   setTimeout(fetchdata,1000);
-  }
- });
-  //appliance no 3
-  $.ajax({
-  url: 'queries/getReadings.php',
-  type: 'post',
-  data: {applianceID: 3,limit: 20},
-  dataType: 'JSON',
-  success: function(data){
-   // Perform operation on return value     
-   applianceGraph3.setData(data);
-},
-  complete:function(data){
-   setTimeout(fetchdata,1000);
-  }
- });
-  //appliance no 4
-  $.ajax({
-  url: 'queries/getReadings.php',
-  type: 'post',
-  data: {applianceID: 4,limit: 20},
-  dataType: 'JSON',
-  success: function(data){
-   // Perform operation on return value     
-   applianceGraph4.setData(data);
-},
-  complete:function(data){
-   setTimeout(fetchdata,1000);
-  }
- });
-}
+<!-- bill calculator modal -->
+<div id="billCalculator" class="modal fade bd-example-modal-sm" role="dialog">
+  <div class="modal-dialog modal-sm">
 
-$(document).ready(function(){
- setTimeout(fetchdata,1000);
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      <h4 class="modal-title">Bill Calculator</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group col-xs-2">
+          <div class="input-group input-group-round">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;KWh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-bolt"></i><span>
+              </span>
+            </div>
+            <input type="number" oninput="calculateBill()" class="form-control filter-list-input" maxlength="20" id="wattTotal" value="0" placeholder="KiloWatt" aria-label="First Name">
+          </div>
+        </div>
+        <div class="form-group col-xs-2">
+          <div class="input-group input-group-round">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <span>Php/KWh&nbsp;&nbsp;&nbsp;<i class="fas fa-money-bill-alt"></i><span>
+              </span>
+            </div>
+            <input type="number" oninput="calculateBill()" class="form-control filter-list-input" maxlength="20" id="wattPrice" value="0" placeholder="Price Per KiloWatt" aria-label="First Name">
+          </div>
+        </div>
+        <div class="form-group col-xs-2">
+          <div class="input-group input-group-round">
+            <span class="input-group-text">
+                <span>Total</i><span>
+              </span>
+            <input type="text" class="form-control filter-list-input" disabled maxlength="20" id="totalPrice" value="0 Php" placeholder="Price Per KiloWatt" aria-label="First Name">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- end bill calculator modal -->
+<script>
+$( document ).ready(function() {
+  changeConsYear();
+  // var year = document.getElementById("yearSelect").value;
+  //   $.ajax({
+  //       url: "queries/monthlyConsumption.php",
+  //       method: "POST",
+  //       data: {year:year},
+  //       dataType: 'JSON',
+  //       success: function(result){
+  //           totalConsGraph.setData(result);
+  //       }
+  //   })
+});
+var totalConsGraph = Morris.Bar({
+  element: 'totalConsGraph',
+  data: 
+   [ 
+     {Month: 'January',   KWh: 2}, 
+     {Month: 'February',  KWh: 2}, 
+     {Month: 'March',     KWh: 2}, 
+     {Month: 'April',     KWh: 2}, 
+     {Month: 'May',       KWh: 2}, 
+     {Month: 'June',      KWh: 2}, 
+     {Month: 'July',      KWh: 2}, 
+     {Month: 'August',    KWh: 2}, 
+     {Month: 'September', KWh: 2}, 
+     {Month: 'October',   KWh: 2}, 
+     {Month: 'November',  KWh: 2}, 
+     {Month: 'December',  KWh: 2}
+   ], 
+   xkey: 'Month', 
+   ykeys: ['KWh'], 
+   labels: ['KWh '], 
+   xLabelAngle: 50,
+   stacked: true 
 });
 </script>
-
-<script>
-var applianceGraph1 = Morris.Line({
-  element: 'applianceGraph1',
-  data: [ 
-    { DT: "June", Watt: 0},
-    { DT: "July", Watt: 0},
-    { DT: "August", Watt: 0},
-    { DT: "September", Watt: 0},
-    { DT: "October", Watt: 0},
-    { DT: "November", Watt: 0},
-    { DT: "December", Watt: 0}],
-  xkey: 'DT',
-  ykeys: ['Watt'],
-  labels: ['Watt (W)'],
-  hideHover: false,
-  parseTime: false
-});
-
-var applianceGraph2 = Morris.Line({
-  element: 'applianceGraph2',
-  data: [ 
-    { DT: "June", Watt: 0},
-    { DT: "July", Watt: 0},
-    { DT: "August", Watt: 0},
-    { DT: "September", Watt: 0},
-    { DT: "October", Watt: 0},
-    { DT: "November", Watt: 0},
-    { DT: "December", Watt: 0}],
-  xkey: 'DT',
-  ykeys: ['Watt'],
-  labels: ['Watt (W)'],
-  hideHover: false,
-  parseTime: false
-});
-
-var applianceGraph3 = Morris.Line({
-  element: 'applianceGraph3',
-  data: [ 
-    { DT: "June", Watt: 0},
-    { DT: "July", Watt: 0},
-    { DT: "August", Watt: 0},
-    { DT: "September", Watt: 0},
-    { DT: "October", Watt: 0},
-    { DT: "November", Watt: 0},
-    { DT: "December", Watt: 0}],
-  xkey: 'DT',
-  ykeys: ['Watt'],
-  labels: ['Watt (W)'],
-  hideHover: false,
-  parseTime: false
-});
-
-var applianceGraph4 = Morris.Line({
-  element: 'applianceGraph4',
-  data: [ 
-    { DT: "June", Watt: 0},
-    { DT: "July", Watt: 0},
-    { DT: "August", Watt: 0},
-    { DT: "September", Watt: 0},
-    { DT: "October", Watt: 0},
-    { DT: "November", Watt: 0},
-    { DT: "December", Watt: 0}],
-  xkey: 'DT',
-  ykeys: ['Watt'],
-  labels: ['Watt (W)'],
-  hideHover: false,
-  parseTime: false
-});
-
-</script>
-<script>
-Morris.Bar({
-  element: 'bar-example',
-  data: [
-    { y: "June", a: 100},
-    { y: "July", a: 75},
-    { y: "August", a: 50},
-    { y: "September", a: 75},
-    { y: "October", a: 50},
-    { y: "November", a: 75},
-    { y: "December", a: 100}
-  ],
-  xkey: 'y',
-  ykeys: ['a'],
-  labels: ['Power Consumption', 'Series B']
-});
- </script>
-    <script src="js/morris.js"></script>
-    <link rel="stylesheet" href="css/morris.css">
+<script src="js/morris.js"></script>
+<link rel="stylesheet" href="css/morris.css">
 </body>
 </html>
