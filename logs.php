@@ -39,9 +39,9 @@ include_once "navigator.php";
                                         } elseif ($applianceName['logAction'] == 1) {
                                             $action = "Turn On";
                                         } elseif ($applianceName['logAction'] == 2) {
-                                            $action = "Appliance Disabled";
+                                            $action = "Disabled";
                                         } elseif ($applianceName['logAction'] == 3) {
-                                            $action = "Appliance Enabled";
+                                            $action = "Enabled";
                                         }
                                         if ($applianceName['logVia'] == 0) {
                                             $action2 = "Webpage";
@@ -72,8 +72,10 @@ include_once "navigator.php";
                 </div>
             </div>
         </div>
+        <a href="saveToPDF.php"><button type="button" class="btn btn-success"><i class="fas fa-file-pdf"> Save to PDF</i></button></a>
     </div><!-- .animated -->
     <div class="card">
+    <br>
     <button type="button" class="btn btn-info" onclick="clearLogs()">Clear Logs</button>
     </div>
 <script>
