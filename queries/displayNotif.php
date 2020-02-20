@@ -1,6 +1,7 @@
 <?php
 include "../databaseConnection.php";
 $userID = $_POST['userID'];
+date_default_timezone_set("Asia/Manila");
 $curentDT = date('Y-m-d H:i:s');
 $query = "SELECT tbl_notification_status.notifID, tbl_notification_status.notifStatus, tbl_notifications.notifID, tbl_notifications.notifMessage, tbl_notifications.notifText, tbl_notifications.notifDateTime FROM tbl_notification_status 
 JOIN tbl_notifications ON tbl_notification_status.notifID = tbl_notifications.notifID WHERE tbl_notification_status.notifUserID = ? ORDER BY tbl_notifications.notifDateTime DESC LIMIT 3";

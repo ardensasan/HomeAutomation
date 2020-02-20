@@ -52,6 +52,9 @@ include_once "navigator.php";
                                         } elseif ($applianceName['logVia'] == 2) {
                                             $action2 = "Schedule";
                                             $exec = "NA";
+                                        } elseif ($applianceName['logVia'] == 3) {
+                                            $action2 = "SMS";
+                                            $exec = $applianceName['FullName'];
                                         }
                                         echo '<tr><td class="text-center">'.$count++.'</td>
                                         <td class="text-center">'. $applianceName['D'].'</td>

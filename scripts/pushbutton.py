@@ -31,7 +31,6 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(A4,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 def turnONOFF(channel):
-    print(channel)
     dateTime = datetime.datetime.now()
     applianceStatus = 3;
     applianceID = 0;
@@ -62,7 +61,6 @@ def turnONOFF(channel):
             cursor.close()
             subprocess.call(['python3', '/var/www/html/scripts/turnON.py', str(applianceOutputPin),])
         if applianceStatus == 1:
-            print("port11");
             cursor = connection.cursor()
             cursor.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
             connection.commit()

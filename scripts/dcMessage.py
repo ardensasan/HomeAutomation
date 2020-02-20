@@ -23,7 +23,7 @@ port.read(10)
 
 # Sending a message to a particular Number
  
-port.write('AT+CMGS="9956139395"'+'\r\n')
+port.write('AT+CMGS="09956139395"'+'\r\n')
 port.read(10)
 
 
