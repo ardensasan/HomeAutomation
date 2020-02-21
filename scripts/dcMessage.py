@@ -4,31 +4,32 @@ import os, time
  
 GPIO.setmode(GPIO.BOARD)   
 
-port = serial.Serial("/dev/ttyAMA0", baudrate=9600, timeout=1)
+dcMessage = serial.Serial("/dev/ttyAMA0", baudrate=9600, timeout=1)
  
 # Transmitting AT Commands to the Modem
 # '\r\n' indicates the Enter key
  
-port.write('AT'+'\r\n')
-port.read(10)
+dcMessage.write('AT'+'\r\n')
+dcMessage.read(5)
 
 
-port.write('ATE0'+'\r\n')      # Disable the Echo
-port.read(10)
+dcMessage.write('ATE0'+'\r\n')      # Disable the Echo
+dcMessage.read(5)
 
 
-port.write('AT+CMGF=1'+'\r\n')  # Select Message format as Text mode 
-port.read(10)
+dcMessage.write('AT+CMGF=1'+'\r\n')  # Select Message format as Text mode 
+dcMessage.read(5)
 
 
 # Sending a message to a particular Number
  
-port.write('AT+CMGS="09956139395"'+'\r\n')
-port.read(10)
+dcMessage.write('AT+CMGS="09973386295"'+'\r\n')
+dcMessage.read(5)
 
 
-port.write('RPi is disconnected'+'\r\n')  # Message
-port.read(10)
+dcMessage.write('RPi is disconnected'+'\r\n')  # Message
+dcMessage.read(5)
 
  
-port.write("\x1A") # Enable to send SMS
+dcMessage.write("\x1A") # Enable to send SMS
+dcMessage.close()

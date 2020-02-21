@@ -35,21 +35,22 @@ def turnONOFF(channel):
     applianceStatus = 3;
     applianceID = 0;
     applianceOutputPin = 100;
-    applianceName  = "aw";
+    applianceName  = None;
     #appliance 1
     # if we're here, an edge was recognized
     sleep(0.005) # debounce for 5mSec
     # only show valid edges
+    print(channel)
     if GPIO.input(channel) == 0:
-        result = connection.cursor()
-        result.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = %s AND applianceName IS NOT NULL AND applianceStatus != 3",(channel,))
-        for x in result:
-            applianceID = x[0];
-            applianceName = x[1];
-            applianceStatus = x[2];
-            applianceOutputPin = x[3];
-        result.close()
-        print(applianceStatus);
+        turnONOFFAppliance = connection.cursor()
+        turnONOFFAppliance.execute("SELECT applianceID,applianceName,applianceStatus,applianceOutputPin FROM tbl_appliances WHERE applianceInputPin = %s AND applianceName IS NOT NULL AND applianceStatus != 3",(channel,))
+        turnONOFFDAppliance = turnONOFFAppliance.fetchall()
+        turnONOFFAppliance.close()
+        for turnONOFFDetails in turnONOFFDAppliance:
+            applianceID = turnONOFFDetails[0];
+            applianceName = turnONOFFDetails[1];
+            applianceStatus = turnONOFFDetails[2];
+            applianceOutputPin = turnONOFFDetails[3];
         if applianceStatus == 0:
             cursor = connection.cursor()
             cursor.execute("UPDATE tbl_appliances SET applianceStatus = 1 WHERE applianceID = %s",(applianceID,))

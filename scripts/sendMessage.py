@@ -2,14 +2,19 @@ import serial
 import RPi.GPIO as GPIO      
 import os, time
 import sys
-
+import mysql.connector
+connection = mysql.connector.connect(
+  host="localhost",
+  user="abaynfriends",
+  passwd="abaynfriends",
+  database="homeautomation"
+)
 
 message = str(sys.argv[1]);
 phoneNumber = str(sys.argv[2]);
-print(phoneNumber)
+
 # Enable Serial Communication
 port = serial.Serial("/dev/ttyAMA0", baudrate=9600, timeout=1)
- 
 # Transmitting AT Commands to the Modem
 # '\r\n' indicates the Enter key
  

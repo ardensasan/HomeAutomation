@@ -48,16 +48,16 @@ def saveReadings(current,voltage,applianceID):
     dateTime = datetime.datetime.now();
     dateLimit = dateLimit.replace(microsecond=0);
     
-    cursor = connection.cursor()
-    cursor.execute("INSERT INTO tbl_readings(applianceID,rCurrent,rVoltage,rDateTime) VALUES (%s,%s,%s,%s)",(applianceID,current,voltage,dateTime))
+    saveRead = connection.cursor()
+    saveRead.execute("INSERT INTO tbl_readings(applianceID,rCurrent,rVoltage,rDateTime) VALUES (%s,%s,%s,%s)",(applianceID,current,voltage,dateTime))
     connection.commit()
-    cursor.close()
+    saveRead.close()
     
-    cursor = connection.cursor()
+    saveRead = connection.cursor()
     query = 'DELETE FROM tbl_readings WHERE rDateTime < "'+str(dateLimit)+'"';
-    cursor.execute(query);
+    saveRead.execute(query);
     connection.commit()
-    cursor.close()    
+    saveRead.close()    
     
 def saveLowNotification(wattage,applianceID,applianceName):
     connection = mysql.connector.connect(
@@ -66,27 +66,35 @@ def saveLowNotification(wattage,applianceID,applianceName):
   passwd="abaynfriends",
   database="homeautomation"
 )
-    notifMessage = "Abnormal watt readings on Port "+str(applianceID)+" "+str(applianceName);
-    notifText = str(wattage)+" W lower than acceptable levels";
-    result = connection.cursor()
-    result.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
-    result.lastrowid
-    result.execute('SELECT last_insert_id()')
-    lastID = result.fetchone()
+    setAbnormal = connection.cursor()
+    setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 1 WHERE applianceID = %s",(applianceID,))
     connection.commit()
-    result.close()
+    setAbnormal.close()
     
-    subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
+    notifMessage = "Low Abnormal watt readings on Port "+str(applianceID)+" "+str(applianceName);
+    notifText = str(wattage)+" W lower than acceptable levels";
+    saveLow = connection.cursor()
+    saveLow.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
+    saveLow.lastrowid
+    saveLow.execute('SELECT last_insert_id()')
+    lastID = saveLow.fetchone()
+    connection.commit()
+    saveLow.close()
     
-    result = connection.cursor()
-    result.execute("SELECT userID FROM tbl_users");
-    myresult = result.fetchall()
+    saveUnsentNotif = connection.cursor()
+    saveUnsentNotif.execute("INSERT INTO tbl_unsentNotif(notifID,notifMessage) VALUES (%s,%s)",(lastID[0],str(notifMessage)))
+    connection.commit()
+    saveUnsentNotif.close()
+    
+    saveLow = connection.cursor()
+    saveLow.execute("SELECT userID FROM tbl_users");
+    myresult = saveLow.fetchall()
+    saveLow.close()
     for userID in myresult:
         saveNotif = connection.cursor()
         saveNotif.execute("INSERT INTO tbl_notification_status(notifUserID,notifID,notifStatus) VALUES (%s,%s,%s)",(userID[0],lastID[0],0))
         connection.commit()
         saveNotif.close()
-    result.close()
     
 def saveHighNotification(wattage,applianceID,applianceName):
     connection = mysql.connector.connect(
@@ -95,27 +103,37 @@ def saveHighNotification(wattage,applianceID,applianceName):
   passwd="abaynfriends",
   database="homeautomation"
 )
-    notifMessage = "Abnormal watt readings on Port "+str(applianceID)+" "+str(applianceName);
-    notifText = str(wattage)+" W lower than acceptable levels";
-    result = connection.cursor()
-    result.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
-    result.lastrowid
-    result.execute('SELECT last_insert_id()')
-    lastID = result.fetchone()
+    print("dri")
+    setAbnormal = connection.cursor()
+    setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 1 WHERE applianceID = %s",(applianceID,))
     connection.commit()
-    result.close()
+    setAbnormal.close()
     
-    subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
+    notifMessage = "High Abnormal watt readings on Port "+str(applianceID)+" "+str(applianceName);
+    notifText = str(wattage)+" W lower than acceptable levels";
+    saveHigh = connection.cursor()
+    saveHigh.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
+    saveHigh.lastrowid
+    saveHigh.execute('SELECT last_insert_id()')
+    lastID = saveHigh.fetchone()
+    connection.commit()
+    saveHigh.close()
     
-    result = connection.cursor()
-    result.execute("SELECT userID FROM tbl_users");
-    myresult = result.fetchall()
+    saveUnsentNotif = connection.cursor()
+    saveUnsentNotif.execute("INSERT INTO tbl_unsentNotif(notifID,notifMessage) VALUES (%s,%s)",(lastID[0],str(notifMessage)))
+    connection.commit()
+    saveUnsentNotif.close()
+    
+    
+    saveHigh = connection.cursor()
+    saveHigh.execute("SELECT userID FROM tbl_users");
+    myresult = saveHigh.fetchall()
+    saveHigh.close()
     for userID in myresult:
         saveNotif = connection.cursor()
         saveNotif.execute("INSERT INTO tbl_notification_status(notifUserID,notifID,notifStatus) VALUES (%s,%s,%s)",(userID[0],lastID[0],0))
         connection.commit()
         saveNotif.close()
-    result.close()
     
     
 def checkReadings(wattage,applianceID):
@@ -128,32 +146,38 @@ def checkReadings(wattage,applianceID):
     global lCounter;
     global hCounter;
     
-    result = connection.cursor()
-    result.execute("SELECT applianceStatus,applianceName,applianceUCL,applianceLCL,applianceRating FROM tbl_appliances WHERE applianceID = %s",(applianceID,))
-    for x in result:
-        applianceStatus = x[0];
-        applianceName = x[1];
-        applianceUCL = x[2];
-        applianceLCL = x[3];
-        applianceRating = x[4];
-    result.close()
-    dateTime = datetime.datetime.now();
-    if(applianceName != None and applianceRating != None):
-        if(float(wattage) < applianceLCL and applianceStatus == 1):
-            lCounter[applianceID-1] += 1;
-            if(lCounter[applianceID-1] == 5):
-                if(lCounter[applianceID-1] == 5000):
-                    lCounter[applianceID-1] = 6;
-                saveLowNotification(wattage,applianceID,applianceName)
-        elif(float(wattage) > applianceLCL and applianceStatus == 1):
-            hCounter[applianceID-1] += 1;
-            if(hCounter[applianceID-1] == 5):
-                if(hCounter[applianceID-1] == 5000):
-                    hCounter[applianceID-1] = 6;
-                saveHighNotification(wattage,applianceID,applianceName)
-        else:
-            lCounter = [0,0,0,0];
-            hCounter = [0,0,0,0];
+    
+    checkRead = connection.cursor()
+    checkRead.execute("SELECT applianceStatus,applianceName,applianceUCL,applianceLCL,applianceRating FROM tbl_appliances WHERE applianceID = %s",(applianceID,))
+    readResult = checkRead.fetchall()
+    checkRead.close()
+    for readR in readResult:
+        applianceStatus = readR[0];
+        applianceName = readR[1];
+        applianceUCL = readR[2];
+        applianceLCL = readR[3];
+        applianceRating = readR[4];
+        if(applianceName != None and applianceRating != None and applianceUCL != None and applianceLCL != None):
+            if(float(wattage) < applianceLCL and applianceStatus == 1):
+                lCounter[applianceID-1] += 1;
+                if(lCounter[applianceID-1] == 5):
+                    if(lCounter[applianceID-1] == 5000):
+                        lCounter[applianceID-1] = 6;
+                    saveLowNotification(wattage,applianceID,applianceName)
+            elif(float(wattage) > applianceUCL and applianceStatus == 1):
+                hCounter[applianceID-1] += 1;
+                if(hCounter[applianceID-1] == 5):
+                    if(hCounter[applianceID-1] == 5000):
+                        hCounter[applianceID-1] = 6;
+                    saveHighNotification(wattage,applianceID,applianceName)
+            else:
+                setAbnormal = connection.cursor()
+                setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 0 WHERE applianceID = %s",(applianceID,))
+                connection.commit()
+                setAbnormal.close()
+                lCounter[applianceID-1] = 0;
+                hCounter[applianceID-1] = 0;
+    
              
 rawVoltage0 = [0]*samples
 rawVoltage1 = [0]*samples

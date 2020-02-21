@@ -368,7 +368,7 @@ function removeAppliance(applianceID,applianceOutputPin)
 function calibrateCount()
 {
     var applianceID = document.getElementById("calAppID").value;
-    var count = 3;
+    var count = 50;
     document.getElementById("calibrateCountdown").innerHTML = '<button class="btn btn-primary" disabled><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please Wait '+count+' seconds&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
     var countDown = setInterval(
         function(){ 

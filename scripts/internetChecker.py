@@ -18,7 +18,8 @@ while True:
             cMessageSent = True;
             dcMessageSent = False;
             print("connected");
-            subprocess.call(['python', '/var/www/html/scripts/cMessage.py'])
+            notifMessage = "RPi internet connection has been restored";
+            subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
     else:
         #disconnected message
         if dcMessageSent == False:
@@ -26,5 +27,6 @@ while True:
             cMessageSent = False;
             dcMessageSent = True;
             print("discconnected");
-            subprocess.call(['python', '/var/www/html/scripts/dcMessage.py'])
-    time.sleep(5)
+            notifMessage = "RPi is disconnected";
+            subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
+    time.sleep(20)
