@@ -7,8 +7,7 @@
 <!--<![endif]-->
 
 <body>
-    <?php 
-include "sessions.php";
+<?php 
 include_once "navigator.php";
 $userType = $_SESSION['userType'];
 $userID = $_SESSION['userID'];

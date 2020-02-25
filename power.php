@@ -9,7 +9,6 @@
 
 <body>
 <?php 
-include "sessions.php";
 include_once "navigator.php";
 $portNumber = 0;
 $portName = "";

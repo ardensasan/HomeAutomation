@@ -21,11 +21,11 @@
     <title>Abay</title>
 </head>
 <?php
+include "sessions.php";
+include "databaseConnection.php";
 const ADMIN = 0;
 $userID = $_SESSION['userID'];
 $userType = $_SESSION['userType'];
-include "sessions.php";
-include "databaseConnection.php";
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <body>
@@ -104,8 +104,18 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             <li class="nav-item ">
                                 <a class="nav-link" href="schedule.php" id="dashboard"><i class="fa fa-fw fa-calendar"></i>Schedule</a>
                             </li>
-                            <li class="nav-item ">
-                                <a class="nav-link" href="power.php" id="power"><i class="fa fa-bolt"></i>Power Consumption</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-11" aria-controls="submenu-11"><i class="fa fa-bolt"></i>Power</a>
+                                <div id="submenu-11" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="power.php">Power Readings</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="powerConsumption.php">Power Consumption</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="nav-item ">
                                 <a class="nav-link" href="logs.php" id="dashboard"><i class="fa fa-book"></i>Logs</a>

@@ -1,14 +1,16 @@
 <?php
 include "../sessions.php";
 include "../databaseConnection.php";
-$userName = $_POST['userName'];
-$passWord = $_POST['passWord'];
-$state = "3";
+$userName = $_POST['loginUN'];
+$passWord = $_POST['loginPW'];
+$state = "0";
 //check if account exists
 $query = "SELECT * FROM `tbl_users` WHERE `userName` = ? AND `userPass` = ?";
 $getUserDetails=$conn->prepare($query);
 $getUserDetails->execute([$userName,$passWord]);
-if($getUserDetails->rowCount() > 0) {
+if($getUserDetails->rowCount() == 0){
+    echo "0";
+}else{
     while($userDetails = $getUserDetails->fetch(PDO::FETCH_ASSOC)){
         $_SESSION['userType'] = $userDetails['userType'];
         $_SESSION['userID'] = $userDetails['userID'];
@@ -16,10 +18,8 @@ if($getUserDetails->rowCount() > 0) {
         $_SESSION['userLastName'] = $userDetails['userLastName'];
         $_SESSION['userPass'] = $userDetails['userPass'];
         $_SESSION['userPhoneNumber'] = $userDetails['userPhoneNumber'];
+        $_SESSION['isLogged'] = 1;
+        echo "1";
     }
-    $state =  "1";
-}else{
-    $state =  "0";
 }
-echo $state;
 ?>

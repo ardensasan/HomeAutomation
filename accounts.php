@@ -7,7 +7,6 @@
   <!--<![endif]-->
   <body>
   <?php 
-include "sessions.php";
 include_once "navigator.php";
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
@@ -118,7 +117,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
               </div>
             </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick ="addAccount()" data-dismiss="modal">Save
+            <button type="button" class="btn btn-default" onclick ="addAccount()">Save
             </button>
           </div>
         </div>

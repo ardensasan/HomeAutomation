@@ -66,19 +66,18 @@ function changeApplianceName(applianceID)
 //check use login credentials
 function loginUser()
 {
-    var loginUN = document.getElementById("username").value;
-    var loginPW = document.getElementById("password").value;
+    var loginUN = document.getElementById("loginUN").value;
+    var loginPW = document.getElementById("loginPW").value;
     $.ajax({
         url: "queries/loginUser.php",
         method: "POST",
-        data: {userName: loginUN, passWord: loginPW},
-        success: function(accountStatus){
-            if(accountStatus == "0"){
-                changeText("errorMessage","Account doesn't exist");
-            }else if(accountStatus == "1"){
-                changeText("errorMessage"," ");
-                alert("Successfully logged in!");
+        data: {loginUN: loginUN, loginPW: loginPW},
+        success: function(result){
+            if(result == "1"){
+                document.getElementById("errorMessage").innerHTML = "";
                 window.location = "dashboard.php";
+            }else{
+                document.getElementById("errorMessage").innerHTML = "Account Doesn't Exist";
             }
         }
     })
@@ -266,9 +265,16 @@ function getReadings()
 }
 
 //remove account
-function removeAccount()
+function removeAccount(userID)
 {
-    alert("dsadas");
+    $.ajax({
+        url: "queries/removeAccount.php",
+        method: "POST",
+        data: {userID: userID},
+        success: function(a){
+            location.reload();
+        }
+    })
 }
 
 //clear all logs
@@ -552,7 +558,32 @@ function calculateBill(){
     var kiloWatt = document.getElementById("wattTotal").value;
     var price = document.getElementById("wattPrice").value;
     var bill = (kiloWatt*price).toFixed(2);
-    document.getElementById("totalPrice").value = bill+" Php";
+    document.g
+    etElementById("totalPrice").value = bill+" Php";
+}
+//edit appliance name
+function addAccount()
+{
+    var firstName = document.getElementById("addAccountFirstName").value;
+    var lastName = document.getElementById("addAccountLastName").value;
+    var userName = document.getElementById("addAccountUserName").value;
+    var PW1 = document.getElementById("addAccountPassword").value;
+    var PW2 = document.getElementById("addAccountCPassword").value;
+    if(!firstName || !lastName || !userName || !PW1 || !PW2){
+        alert("Fill in all fields")
+    }else if(PW1 != PW2){
+        alert("Passwords not the same")
+    }else{
+        $.ajax({
+            url: "queries/addAccount.php",
+            method: "POST",
+            data: {firstName:firstName,lastName:lastName,userName:userName,PW1:PW1},
+            success: function(a){
+                alert(a)
+                location.reload();
+            }
+        })
+    }
 }
 
 //test

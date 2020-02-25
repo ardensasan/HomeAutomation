@@ -3,7 +3,7 @@ include "../databaseConnection.php";
 include "../sessions.php";
 $year = $_POST['year'];
 $kiloWatt = 0;
-$query = "SELECT totalConsWatt,TIME_TO_SEC(totalConsDuration) as consDuration FROM tbl_totalconsumption WHERE totalConsYear = ?";
+$query = "SELECT totalConsWatt,timestampdiff(second,totalConsStart, totalConsEnd)/3600 as H FROM tbl_totalconsumption WHERE year(totalConsStart) = ?";
 $getTotalConsumption = $conn->prepare($query);
 $getTotalConsumption->execute([$year]);
 if($getTotalConsumption->rowCount() == 0){
@@ -11,7 +11,7 @@ if($getTotalConsumption->rowCount() == 0){
 }else{
     while($totalConsumption = $getTotalConsumption->fetch(PDO::FETCH_ASSOC))
     {
-        $kiloWatt += (($totalConsumption['consDuration']*$totalConsumption['totalConsWatt'])/3600)/1000;
+        $kiloWatt += ($totalConsumption['H']/1000)*$totalConsumption['totalConsWatt'];
     }
 }
 echo round($kiloWatt,2);

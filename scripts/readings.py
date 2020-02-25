@@ -17,11 +17,17 @@ highUCL = "Wattage is higher than accepted levels";
 
 lCounter = [0,0,0,0];
 hCounter = [0,0,0,0];
-fallingCounter1 = 0;
-fallingCounter2 = 0;
-fallingCounter3 = 0;
-fallingCounter4 = 0;
-fallingCounter5 = 0;
+dateNow = datetime.datetime.now()
+currentYear = dateNow.year;
+currentMonth = dateNow.month;
+
+connection = mysql.connector.connect(host="localhost", user="abaynfriends", passwd="abaynfriends", database="homeautomation")
+insertConsumption = connection.cursor()
+insertConsumption.execute("INSERT INTO tbl_totalconsumption(totalConsPort,totalConsWatt,totalConsStart,totalConsEnd) "
+                          "VALUES (1,0,%s,%s), (2,0,%s,%s), (3,0,%s,%s), (4,0,%s,%s)",(dateNow,dateNow,dateNow,dateNow,dateNow,dateNow,dateNow,dateNow))
+connection.commit()
+insertConsumption.close()
+
 
 def getCurrent(value):
     if(value <= 2):
@@ -38,12 +44,6 @@ def getVoltage(value):
     return value;
 
 def saveReadings(current,voltage,applianceID):
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
     dateLimit = datetime.datetime.now()-datetime.timedelta(minutes=10);
     dateTime = datetime.datetime.now();
     dateLimit = dateLimit.replace(microsecond=0);
@@ -60,18 +60,12 @@ def saveReadings(current,voltage,applianceID):
     saveRead.close()    
     
 def saveLowNotification(wattage,applianceID,applianceName):
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
     setAbnormal = connection.cursor()
     setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 1 WHERE applianceID = %s",(applianceID,))
     connection.commit()
     setAbnormal.close()
     
-    notifMessage = "Low Abnormal watt readings on Port "+str(applianceID)+" "+str(applianceName);
+    notifMessage = "Abnormal low watt readings on Port "+str(applianceID)+" "+str(applianceName);
     notifText = str(wattage)+" W lower than acceptable levels";
     saveLow = connection.cursor()
     saveLow.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
@@ -97,19 +91,13 @@ def saveLowNotification(wattage,applianceID,applianceName):
         saveNotif.close()
     
 def saveHighNotification(wattage,applianceID,applianceName):
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
-    print("dri")
+    dateTime = datetime.datetime.now();
     setAbnormal = connection.cursor()
     setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 1 WHERE applianceID = %s",(applianceID,))
     connection.commit()
     setAbnormal.close()
     
-    notifMessage = "High Abnormal watt readings on Port "+str(applianceID)+" "+str(applianceName);
+    notifMessage = "Abnormal high watt readings on Port "+str(applianceID)+" "+str(applianceName);
     notifText = str(wattage)+" W lower than acceptable levels";
     saveHigh = connection.cursor()
     saveHigh.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
@@ -137,12 +125,6 @@ def saveHighNotification(wattage,applianceID,applianceName):
     
     
 def checkReadings(wattage,applianceID):
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
     global lCounter;
     global hCounter;
     
@@ -160,15 +142,15 @@ def checkReadings(wattage,applianceID):
         if(applianceName != None and applianceRating != None and applianceUCL != None and applianceLCL != None):
             if(float(wattage) < applianceLCL and applianceStatus == 1):
                 lCounter[applianceID-1] += 1;
-                if(lCounter[applianceID-1] == 5):
+                if(lCounter[applianceID-1] == 2):
                     if(lCounter[applianceID-1] == 5000):
-                        lCounter[applianceID-1] = 6;
+                        lCounter[applianceID-1] = 3;
                     saveLowNotification(wattage,applianceID,applianceName)
             elif(float(wattage) > applianceUCL and applianceStatus == 1):
                 hCounter[applianceID-1] += 1;
-                if(hCounter[applianceID-1] == 5):
+                if(hCounter[applianceID-1] == 2):
                     if(hCounter[applianceID-1] == 5000):
-                        hCounter[applianceID-1] = 6;
+                        hCounter[applianceID-1] = 3;
                     saveHighNotification(wattage,applianceID,applianceName)
             else:
                 setAbnormal = connection.cursor()
@@ -177,8 +159,19 @@ def checkReadings(wattage,applianceID):
                 setAbnormal.close()
                 lCounter[applianceID-1] = 0;
                 hCounter[applianceID-1] = 0;
-    
-             
+
+def updateTotalWatts(wattage,applianceID):
+    dateNow = datetime.datetime.now();
+    getMaxID = connection.cursor()
+    getMaxID.execute("SELECT MAX(totalConsID) FROM tbl_totalconsumption WHERE totalConsPort = %s", (applianceID,))
+    totalConsID = getMaxID.fetchone()
+    getMaxID.close()
+
+    setAverageWatt = connection.cursor()
+    setAverageWatt.execute("UPDATE tbl_totalconsumption SET totalConsWatt = ((totalConsWatt+ %s)/2),totalConsEnd = %s WHERE totalConsID = %s", (wattage,str(dateNow),totalConsID[0]))
+    connection.commit()
+    setAverageWatt.close()
+
 rawVoltage0 = [0]*samples
 rawVoltage1 = [0]*samples
 rawVoltage2 = [0]*samples
@@ -190,6 +183,18 @@ rawCurrent2 = [0]*samples
 rawCurrent3 = [0]*samples
 
 while True:
+    connection = mysql.connector.connect(host="localhost", user="abaynfriends", passwd="abaynfriends", database="homeautomation")
+    dateNow = datetime.datetime.now();
+    if dateNow.month != currentMonth:
+        currentMonth = dateNow.month
+        currentYear = dateNow.year
+        insertConsumption = connection.cursor()
+        insertConsumption.execute(
+            "INSERT INTO tbl_totalconsumption(totalConsPort,totalConsWatt,totalConsStart,totalConsEnd) "
+            "VALUES (1,0,%s,%s), (2,0,%s,%s), (3,0,%s,%s), (4,0,%s,%s)",
+            (dateNow, dateNow, dateNow, dateNow, dateNow, dateNow, dateNow, dateNow))
+        connection.commit()
+        insertConsumption.close()
     maxValue0=0;
     minValue0=100000;
     maxValue1=0;
@@ -203,38 +208,45 @@ while True:
         rawVoltage1[i] = adc.read_adc(1, gain=GAIN)            
         rawCurrent0[i] = adc.read_adc(2, gain=GAIN)
         rawCurrent1[i] = adc.read_adc(3, gain=GAIN)
-        
+
         rawCurrent2[i] = adc1.read_adc(0, gain=GAIN)
         rawCurrent3[i] = adc1.read_adc(1, gain=GAIN)            
         rawVoltage2[i] = adc1.read_adc(2, gain=GAIN)
         rawVoltage3[i] = adc1.read_adc(3, gain=GAIN)
 
-
     A0 = getCurrent(max(rawCurrent0))
     A1 = getCurrent(max(rawCurrent1))
     A2 = getCurrent(max(rawCurrent2))
     A3 = getCurrent(max(rawCurrent3))
-    
     V0 = getVoltage(sum(rawVoltage0))
     V1 = getVoltage(sum(rawVoltage1))
     V2 = getVoltage(sum(rawVoltage2))
     V3 = getVoltage(sum(rawVoltage3))
-    
-    dateLimit = datetime.datetime.now()-datetime.timedelta(minutes=10);
-    dateTime = datetime.datetime.now();
-    dateLimit = dateLimit.replace(microsecond=0);
-    
+
     saveReadings(A0,V0,2);
     saveReadings(A1,V1,1);
     
     saveReadings(A2,V2,3);
     saveReadings(A3,V3,4);
-    
-        
-    checkReadings(A0*V0,2);
-    checkReadings(A1*V1,1);
-    
-    checkReadings(A2*V2,3);
-    checkReadings(A3*V3,4);
+
+    watt0 = A0*V0;
+    watt1 = A1*V1;
+    watt2 = A2*V2;
+    watt3 = A3*V3;
+
+    #update watt total consumptiom
+    updateTotalWatts(watt0, 2);
+    updateTotalWatts(watt1, 1);
+
+    updateTotalWatts(watt2, 3);
+    updateTotalWatts(watt3, 4);
+
+    #check for abnormal readings
+
+    checkReadings(watt0,2);
+    checkReadings(watt1,1);
+
+    checkReadings(watt2,3);
+    checkReadings(watt3,4);
     
     time.sleep(1)

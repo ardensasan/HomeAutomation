@@ -40,11 +40,11 @@
             <div class="card-body">
                 <form>
                     <div class="form-group">
-                        <input class="form-control form-control-lg" id="username" type="text" placeholder="Username" autocomplete="off">
+                        <input class="form-control form-control-lg" id="loginUN" type="text" placeholder="Username" autocomplete="off">
                     </div>
                     <span id="errorMessage" style="color:red; font-size: 80%"></span>
                     <div class="form-group">
-                        <input class="form-control form-control-lg" id="password" type="password" placeholder="Password">
+                        <input class="form-control form-control-lg" id="loginPW" type="password" placeholder="Password">
                     </div>
                     <br>
                     <button type="button" class="btn btn-primary btn-lg btn-block" onclick="loginUser()">Sign in</button>

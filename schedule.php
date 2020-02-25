@@ -8,7 +8,6 @@
 <!--<![endif]-->
 <body>
 <?php 
-include "sessions.php";
 include_once "navigator.php";
 $month = date('m');
 $day = date('d');

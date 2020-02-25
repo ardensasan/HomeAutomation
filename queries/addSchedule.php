@@ -7,6 +7,6 @@ $scheduleAction = $_POST['scheduleAction'];
 $scheduleRepeat = $_POST['scheduleRepeat'];
 $query = "INSERT INTO `tbl_schedules`(`scheduleDate`,`scheduleTime`,`scheduleApplianceID`,`scheduleAction`,`scheduleRepeat`,`isExecuted`) 
 VALUES(STR_TO_DATE('$scheduleDate' , '%m/%d/%Y'),STR_TO_DATE('$scheduleTime', '%l:%i %p' ),?,?,?,?)";
-$deleteSchedule=$conn->prepare($query);
-$deleteSchedule->execute([$scheduleApplianceID,$scheduleAction,$scheduleRepeat,0]);
+$addSchedule=$conn->prepare($query);
+$addSchedule->execute([$scheduleApplianceID,$scheduleAction,$scheduleRepeat,0]);
 ?>

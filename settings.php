@@ -8,8 +8,7 @@
 ==
 
 <body>
-    <?php 
-    include "sessions.php";
+<?php 
 include_once "navigator.php";
 $currentPage = basename($_SERVER['PHP_SELF']);
 $userPhoneNumber = $_SESSION['userPhoneNumber'];

@@ -9,7 +9,6 @@
 
 <body>
 <?php 
-include "sessions.php";
 include_once "navigator.php";
 $yearList = array();
 ?>
@@ -19,14 +18,12 @@ $yearList = array();
       <div class="card">
         <div class="card-body">
         <?php 
-            $query = "SELECT totalConsYear FROM tbl_totalconsumption";
+            $query = "SELECT DISTINCT Year(totalConsStart) AS startYear FROM tbl_totalconsumption ORDER BY year(totalConsStart) DESC";
             $getConsumptionYear=$conn->prepare($query);
             $getConsumptionYear->execute();
             while($consumptionYear = $getConsumptionYear->fetch(PDO::FETCH_ASSOC))
             {
-              if(in_array($consumptionYear['totalConsYear'],$yearList,FALSE) == FALSE){
-                array_push($yearList,$consumptionYear['totalConsYear']);
-              }
+                array_push($yearList,$consumptionYear['startYear']);
             }
            echo 'Year&nbsp;&nbsp;&nbsp;<select id="yearSelect" onchange="changeConsYear()">';
             foreach($yearList as $year) {
@@ -90,7 +87,6 @@ $yearList = array();
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
-
   </div>
 </div>
 <!-- end bill calculator modal -->

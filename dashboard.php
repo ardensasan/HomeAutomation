@@ -1,6 +1,5 @@
 <!doctype html>
 <?php
-include "sessions.php";
 include_once "navigator.php";
 ?>
 <body>

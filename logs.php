@@ -1,6 +1,5 @@
 <!doctype html>
 <?php
-include "sessions.php";
 include_once "navigator.php";
 ?>
 <body>
@@ -72,9 +71,9 @@ include_once "navigator.php";
                 </div>
             </div>
         </div>
-        <a href="saveToPDF.php"><button type="button" class="btn btn-success"><i class="fas fa-file-pdf"> Save to PDF</i></button></a>
-    </div><!-- .animated -->
+      </div><!-- .animated -->
     <div class="card">
+    <a href="saveToPDF.php"><button type="button" class="btn btn-success"><i class="fas fa-file-pdf"> Save to PDF</i></button></a>
     <br>
     <button type="button" class="btn btn-info" onclick="clearLogs()">Clear Logs</button>
     </div>
