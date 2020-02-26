@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 25, 2020 at 06:21 PM
--- Server version: 10.4.10-MariaDB
--- PHP Version: 7.3.12
+-- Generation Time: Feb 26, 2020 at 01:10 AM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.3.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -45,7 +45,7 @@ CREATE TABLE `tbl_appliances` (
 --
 
 INSERT INTO `tbl_appliances` (`applianceID`, `applianceName`, `applianceRating`, `applianceStatus`, `applianceOutputPin`, `applianceInputPin`, `applianceUCL`, `applianceLCL`, `applianceReadingStatus`) VALUES
-(1, NULL, NULL, 0, 40, 37, NULL, NULL, 0),
+(1, 'gg', NULL, 0, 40, 37, NULL, NULL, 0),
 (2, NULL, NULL, 0, 38, 35, NULL, NULL, 0),
 (3, NULL, NULL, 0, 36, 33, NULL, NULL, 0),
 (4, NULL, NULL, 0, 32, 31, NULL, NULL, 0);
@@ -115,7 +115,8 @@ CREATE TABLE `tbl_schedules` (
   `scheduleTime` time NOT NULL,
   `scheduleApplianceID` tinyint(1) NOT NULL,
   `scheduleAction` tinyint(1) NOT NULL,
-  `scheduleRepeat` varchar(7) DEFAULT NULL
+  `scheduleRepeat` varchar(7) DEFAULT NULL,
+  `isExecuted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

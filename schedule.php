@@ -16,9 +16,10 @@ $date = $month . "/" . $day . "/" . $year;
 $currentPage = basename($_SERVER['PHP_SELF']);
 $hasRecord = "";
 ?>
+
 <div class="dashboard-wrapper">
-<div class="container-fluid dashboard content">
-<div class="card">
+  <div class="container-fluid dashboard-content ">
+  <div class="card">
 <div class="card-body">
 <table class="table table-bordered table-responsive-md table-striped text-center">
 <span class="table-add float-left mb-3 mr-2">
@@ -108,7 +109,7 @@ $repeat .= " Sun ";
 </table>
 </div>
 </div>
-</div>
+  </div>
 </div>
 <!-- Schedule Modal Start -->
 <div class="modal" id="schedModal">

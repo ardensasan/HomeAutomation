@@ -21,7 +21,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <table class="table table-bordered table-responsive-md table-striped text-center">
         <thead>
           <tr>
-            <th class="text-center">Account ID</th>
             <th class="text-center">Name</th>
             <th class="text-center">Username</th>
             <th class="text-center">Password</th>
@@ -40,7 +39,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
               $userPass = $userDetails["userPass"];
               $userID = $userDetails["userID"];
               echo '<tr>
-              <td class="pt-3-half">'.$userID.'</td>
               <td>
                   '.$userFullName.'
               </td>
@@ -117,7 +115,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
               </div>
             </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick ="addAccount()">Save
+            <button type="button" class="btn btn-default" onclick ="addAccount()">Add Account
             </button>
           </div>
         </div>
