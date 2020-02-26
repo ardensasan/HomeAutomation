@@ -4,19 +4,17 @@ import os, time
 import subprocess
 import datetime
 import mysql.connector
- 
+import urllib.request
+
 hasRead = 1;
 serialStatus = 0;
+cMessageSent = True;
+dcMessageSent = False
 
 def turnON(applianceID,phoneNumber):
     global hasRead;
     hasRead = 1;
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
+
     print(phoneNumber)
     dateTime = datetime.datetime.now()
     getTurnONUser = connection.cursor()
@@ -51,12 +49,7 @@ def turnON(applianceID,phoneNumber):
 def turnOFF(applianceID,phoneNumber):
     global hasRead;
     hasRead = 1;
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
+
     dateTime = datetime.datetime.now()
     turnO = connection.cursor()
     turnO.execute("SELECT userType,userID FROM tbl_users WHERE userPhoneNumber = %s",(phoneNumber,))
@@ -89,12 +82,7 @@ def turnOFF(applianceID,phoneNumber):
 def getStatus(phoneNumber):
     global hasRead;
     hasRead = 1;
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
+
     userID = None;
     message = "";
     dateTime = datetime.datetime.now()
@@ -127,12 +115,6 @@ def getStatus(phoneNumber):
 def getLogs(phoneNumber):        
     global hasRead;
     hasRead = 1;
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
     userID = None;
     message = "";
     dateTime = datetime.datetime.now()
@@ -156,6 +138,7 @@ def getLogs(phoneNumber):
             Action = str(logDetails[4]);
             Via = str(logDetails[5]);
             message += ApplianceName+" "+Action+" "+Date+" "+Time+"\n";
+        print(message)
         phoneNumber = "0" + phoneNumber;
         subprocess.call(['python', '/var/www/html/scripts/sendMessage.py', str(message),str(phoneNumber)])
     deleteMessage();
@@ -173,16 +156,19 @@ def deleteMessage():
     #print response[24:34]; #get number of read message
     #print response[26:36]; #get number of unread message
     deleteMessage.write('AT+CMGD=1\r') #Delete message
-    deleteMessage.read();
+    deleteMessage.read()
     deleteMessage.close()
-    
+
+def connect():
+    try:
+        urllib.request.urlopen('http://google.com') #Python 3.x
+        return True
+    except:
+        return False    
+
 while True:
     global hasRead;
-    connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
+    connection = mysql.connector.connect(host="localhost", user="abaynfriends", passwd="abaynfriends", database="homeautomation"
 )
     print(hasRead)
     # Enable Serial Communication
@@ -193,7 +179,24 @@ while True:
         hasRead = 0;
             
     elif(hasRead == 0):
-        
+        if connect():
+            #connected message
+            if cMessageSent == False:
+                #code for sending message here
+                cMessageSent = True;
+                dcMessageSent = False;
+                print("connected");
+                notifMessage = "RPi internet connection has been restored";
+                subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
+        else:
+            #disconnected message
+            if dcMessageSent == False:
+                #code for sending message here
+                cMessageSent = False;
+                dcMessageSent = True;
+                print("discconnected");
+                notifMessage = "RPi is disconnected";
+                subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
         getUnsent = connection.cursor()
         getUnsent.execute("SELECT notifID,notifMessage FROM tbl_unsentNotif")
         getUnsentNotif = getUnsent.fetchall()
@@ -215,7 +218,6 @@ while True:
         readMessage.open()
         readMessage.write('AT+CMGR=1\r')
         response=readMessage.read(size=2000);
-        print("AW")
         print(response)
         readMessage.close();
         #+CMGR: "REC UNREAD","+639956139395","","19/12/31,21:00:05+32"

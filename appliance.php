@@ -52,7 +52,7 @@ if($getApplianceList->rowCount() > 0){
                                                                 <th class="text-center">Actions
                                                                 </th>
                                                                 <?php
-                                                                if($userID == 0){
+                                                                if($userType == 0){
                                                                     echo '<th class="text-center">Remove</th>';
                                                                 }?>
                                                             </tr>

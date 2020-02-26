@@ -243,8 +243,7 @@ function addSchedule()
             url: "queries/addSchedule.php",
             method: "POST",
             data: {scheduleDate: scheduleDate,scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction,scheduleRepeat:scheduleRepeat},
-            success: function(a){
-                alert(a)
+            success: function(){
                 location.reload();
             }
         })
