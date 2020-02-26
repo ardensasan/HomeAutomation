@@ -184,7 +184,7 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
                         </i>
                       </span>
                                     </div>
-                                        <select class="form-control" id="editPortNum" onchange="displaySchedForm()">
+                                        <select class="form-control" id="editPortNum">
                                     <div id="portOptions">
                                       </select>
                             </div>
@@ -231,7 +231,7 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
                         </i>
                       </span>
                                     </div>
-                                        <select class="form-control" id="portNum" onchange="displaySchedForm()">
+                                        <select class="form-control" id="portNum">
                                     <?php
                                     $query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NULL";
                                     $getApplianceList=$conn->prepare($query);

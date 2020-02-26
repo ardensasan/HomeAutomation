@@ -350,8 +350,12 @@ function addAppliance()
             url: "queries/addAppliance.php",
             method: "POST",
             data: {applianceID:applianceID,applianceName:applianceName},
-            success: function(){
-                location.reload();
+            success: function(result){
+                if(result == "0"){
+                    alert("Appliance with the same name already present");
+                }else{
+                    location.reload();
+                }
             }
         })
     }
