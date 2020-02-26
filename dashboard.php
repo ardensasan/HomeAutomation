@@ -46,11 +46,14 @@ include_once "navigator.php";
                                             $action2 = "Webpage";
                                             $exec = $applianceName['FullName'];
                                         } elseif ($applianceName['logVia'] == 1) {
-                                            $action2 = "Manual";
+                                            $action2 = "Push Button";
                                             $exec = "NA";
-                                        } elseif ($applianceName['logVia'] == 3) {
+                                        } elseif ($applianceName['logVia'] == 2) {
                                             $action2 = "Schedule";
                                             $exec = "NA";
+                                        } elseif ($applianceName['logVia'] == 3) {
+                                            $action2 = "SMS";
+                                            $exec = $applianceName['FullName'];
                                         }
                                         echo '<td class="text-center">'. $applianceName['D'].'</td>
                                         <td class="text-center">'. $applianceName['T'].'</td>
