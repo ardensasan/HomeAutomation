@@ -104,7 +104,7 @@ if($applianceList['applianceRating'] <= 0){
 }else{
   $powerConsumption = $applianceList['applianceRating']." W";
 }
-if($userID == 0){
+if($userType == ADMIN){
     $deviceStatus .= '<td>
     <a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].',\''.$applianceList['applianceOutputPin'].'\')"href="#" class="text-danger">
     <i class="fas fa-minus" aria-hidden="true"></i>';

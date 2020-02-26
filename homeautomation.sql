@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2020 at 01:10 AM
+-- Generation Time: Feb 26, 2020 at 01:30 AM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.3.11
 
@@ -45,7 +45,7 @@ CREATE TABLE `tbl_appliances` (
 --
 
 INSERT INTO `tbl_appliances` (`applianceID`, `applianceName`, `applianceRating`, `applianceStatus`, `applianceOutputPin`, `applianceInputPin`, `applianceUCL`, `applianceLCL`, `applianceReadingStatus`) VALUES
-(1, 'gg', NULL, 0, 40, 37, NULL, NULL, 0),
+(1, NULL, NULL, 0, 40, 37, NULL, NULL, 0),
 (2, NULL, NULL, 0, 38, 35, NULL, NULL, 0),
 (3, NULL, NULL, 0, 36, 33, NULL, NULL, 0),
 (4, NULL, NULL, 0, 32, 31, NULL, NULL, 0);
@@ -64,6 +64,16 @@ CREATE TABLE `tbl_logs` (
   `logVia` tinyint(1) NOT NULL,
   `logUser` smallint(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_logs`
+--
+
+INSERT INTO `tbl_logs` (`logID`, `logDateTime`, `logAppliance`, `logAction`, `logVia`, `logUser`) VALUES
+(1, '2020-02-26 08:11:05', 'gg', 1, 0, 0),
+(2, '2020-02-26 08:11:10', 'gg', 0, 0, 0),
+(3, '2020-02-26 08:11:12', 'gg', 2, 0, 0),
+(4, '2020-02-26 08:11:16', 'gg', 3, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -166,8 +176,8 @@ CREATE TABLE `tbl_users` (
 --
 
 INSERT INTO `tbl_users` (`userID`, `userName`, `userPass`, `userProf`, `userType`, `userFirstName`, `userLastName`, `userPhoneNumber`) VALUES
-(0, 'abay', 'abay', '', 0, 'Ian Joseph', 'Solon', '9956139395'),
-(1, 'znarf', 'znarf', '', 1, 'Franz Dink', 'Catalan', '9999999999');
+(1, 'abay', 'abay', '', 0, 'Ian Joseph', 'Solon', '99561391395'),
+(2, 'znarf', 'znarf', '', 1, 'Franz Dink', 'Catalan', '');
 
 --
 -- Indexes for dumped tables
@@ -231,7 +241,7 @@ ALTER TABLE `tbl_appliances`
 -- AUTO_INCREMENT for table `tbl_logs`
 --
 ALTER TABLE `tbl_logs`
-  MODIFY `logID` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `logID` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_notifications`
@@ -255,7 +265,7 @@ ALTER TABLE `tbl_totalconsumption`
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `userID` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `userID` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
