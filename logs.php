@@ -50,7 +50,7 @@ include_once "navigator.php";
                                             $exec = "NA";
                                         } elseif ($applianceName['logVia'] == 2) {
                                             $action2 = "Schedule";
-                                            $exec = "NA";
+                                            $exec = $applianceName['FullName'];
                                         } elseif ($applianceName['logVia'] == 3) {
                                             $action2 = "SMS";
                                             $exec = $applianceName['FullName'];

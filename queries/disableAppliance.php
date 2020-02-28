@@ -17,4 +17,5 @@ $query = "INSERT INTO tbl_logs (logDateTime, logAppliance, logAction, logVia,log
 $addLog = $conn->prepare($query);
 $addLog->execute([$date,$applianceName,$action,0,$userID]);
 exec("sudo python /var/www/html/scripts/turnOFF.py $applianceOutputPin");
+$conn = null;
 ?>

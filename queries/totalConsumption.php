@@ -14,5 +14,6 @@ if($getTotalConsumption->rowCount() == 0){
         $kiloWatt += ($totalConsumption['H']/1000)*$totalConsumption['totalConsWatt'];
     }
 }
+$conn = null;
 echo round($kiloWatt,2);
 ?>

@@ -8,4 +8,6 @@ $getApplianceList->execute([$applianceID]);
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
 {
     echo '<option id="'.$applianceList['applianceID'].'" value="'.$applianceList['applianceID'].'">'.$applianceList['applianceID'].'</option>';
-    }?>
+    }
+$conn = null;    
+    ?>

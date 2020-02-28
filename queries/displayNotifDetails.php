@@ -16,4 +16,5 @@ while($getNotifDetails = $getNotifs->fetch(PDO::FETCH_ASSOC))
 $query = "UPDATE `tbl_notification_status` SET `notifStatus`= ? WHERE `notifUserID` = ? AND `notifID` = ?";
 $updateNotifStatus=$conn->prepare($query);
 $updateNotifStatus->execute([1,$userID,$notifID]);
+$conn = null;
 echo json_encode($notifDetails);

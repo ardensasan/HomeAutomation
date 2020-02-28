@@ -48,6 +48,7 @@ if($avgWatt > 0){
     "LCL" => NULL
 );
 }
+$conn = null;
 echo json_encode($readings); 
     ?>
     

@@ -8,4 +8,5 @@ $query = "INSERT INTO `tbl_schedules`(`scheduleTime`,`scheduleApplianceID`,`sche
 VALUES(STR_TO_DATE('$scheduleTime', '%l:%i %p' ),?,?,?,?)";
 $deleteSchedule=$conn->prepare($query);
 $deleteSchedule->execute([$scheduleApplianceID,$scheduleAction,$scheduleRepeat,0]);
+$conn = null;
 ?>

@@ -58,5 +58,6 @@ array_push($result,(array('Month' => "September", 'KWh' => round($sep,2))));
 array_push($result,(array('Month' => "October", 'KWh' => round($oct,2))));
 array_push($result,(array('Month' => "November", 'KWh' => round($nov,2))));
 array_push($result,(array('Month' => "December", 'KWh' => round($dec,2))));
+$conn = null;
 echo json_encode($result);
 ?>

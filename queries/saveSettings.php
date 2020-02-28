@@ -13,4 +13,5 @@ $_SESSION['userPhoneNumber'] = $userPhoneNumber;
 $query = "UPDATE `tbl_users` SET `userFirstName` = ?, `userLastName` = ?, `userPass` = ?, `userPhoneNumber` = ? WHERE `userID` = ?";
 $updateProfile = $conn->prepare($query);
 $updateProfile->execute([$userFirstName,$userLastName,$userPass,$userPhoneNumber,$userID]);
+$conn = null;
 ?>

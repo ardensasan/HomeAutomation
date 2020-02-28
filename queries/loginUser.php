@@ -19,6 +19,7 @@ if($getUserDetails->rowCount() == 0){
         $_SESSION['userPass'] = $userDetails['userPass'];
         $_SESSION['userPhoneNumber'] = $userDetails['userPhoneNumber'];
         $_SESSION['isLogged'] = 1;
+        $conn = null;
         echo "1";
     }
 }

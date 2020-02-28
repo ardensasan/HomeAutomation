@@ -12,4 +12,5 @@ $updateAppliance->execute([NULL,NULL,NULL,NULL,$applianceID]);
 $query = "UPDATE `tbl_appliances` SET `applianceName`= ? WHERE `applianceID` = ?";
 $updateAppliance=$conn->prepare($query);
 $updateAppliance->execute([$applianceName,$appliancePort]);
+$conn = null;
 ?>

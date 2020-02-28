@@ -48,3 +48,4 @@ if($getNotifs->rowCount() == 0) {
         </a>';
     }
 }
+$conn = null;

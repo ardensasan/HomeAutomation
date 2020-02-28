@@ -20,3 +20,4 @@ while($getNotif = $getAllNotif->fetch(PDO::FETCH_ASSOC))
 </div>
 </div>';
 }
+$conn = null;

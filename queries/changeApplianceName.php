@@ -9,6 +9,7 @@ if($checkDuplicate->rowCount() == 0){
     $query = "UPDATE `tbl_appliances` SET `applianceName`= ?  WHERE `applianceID` = ?";
     $updateAppliance=$conn->prepare($query);
     $updateAppliance->execute([$applianceName,$applianceID]);
+    $conn = null;
 }else{
     echo "1";
 }

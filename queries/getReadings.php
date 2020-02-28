@@ -12,5 +12,6 @@ while($applianceReadings = $getApplianceReadings->fetch(PDO::FETCH_ASSOC))
     $watt = $applianceReadings['rVoltage'] * $applianceReadings['rCurrent'];
     array_push($rArray,(array('DT' => $applianceReadings['T'] , 'Watt' => $watt)));
 }
+$conn = null;
 echo json_encode(array_reverse($rArray));
 ?>

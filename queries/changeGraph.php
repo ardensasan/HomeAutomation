@@ -17,5 +17,7 @@ while($applianceDetails = $getApplianceDetails->fetch(PDO::FETCH_ASSOC))
         "current" => $applianceDetails['rCurrent']
     );
 }
+$conn = null;
 echo json_encode($result);
+
 ?>

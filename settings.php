@@ -23,7 +23,7 @@ $userLastName = $_SESSION['userLastName'];
                         <div class="container">
                             <div class="picture-container">
                                 <div class="picture">
-                                    <img src="" class="picture-src" id="wizardPicturePreview" title="">
+                                    <img src="userIcon.png" class="picture-src" id="wizardPicturePreview" title="">
                                     <input type="file" name="fileToUpload" id="fileToUpload">
                                     <input type="submit" value="Upload Image" name="submit">
                                 </div>

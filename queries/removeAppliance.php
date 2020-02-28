@@ -12,5 +12,6 @@ $updateAppliance->execute([NULL,0,NULL,NULL,NULL,0,$applianceID]);
 $query = "DELETE FROM `tbl_schedules` WHERE `scheduleApplianceID` = ?";
 $updateAppliance=$conn->prepare($query);
 $updateAppliance->execute([$applianceID]);
+$conn = null;
 exec("sudo python /var/www/html/scripts/turnOFF.py $applianceOutputPin");
 ?>

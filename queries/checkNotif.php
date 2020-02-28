@@ -18,4 +18,5 @@ $notifs = array(
     "messageNum" =>$messageNum,
     "unreadNum" => $unreadNum
 );
+$conn = null;
 echo json_encode($notifs);

@@ -9,4 +9,5 @@ $query = "INSERT INTO `tbl_schedules`(`scheduleDate`,`scheduleTime`,`scheduleApp
 VALUES(STR_TO_DATE('$scheduleDate' , '%m/%d/%Y'),STR_TO_DATE('$scheduleTime', '%l:%i %p' ),?,?,?,?)";
 $addSchedule=$conn->prepare($query);
 $addSchedule->execute([$scheduleApplianceID,$scheduleAction,$scheduleRepeat,0]);
+$conn = null;
 ?>

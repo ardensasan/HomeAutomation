@@ -4,7 +4,8 @@ import os, time
 import subprocess
 import datetime
 import mysql.connector
-import urllib.request
+import re
+import urllib2
 
 hasRead = 1;
 serialStatus = 0;
@@ -24,8 +25,6 @@ def turnON(applianceID,phoneNumber):
     for userDetails in userData:
         userType = userDetails[0];
         userID = userDetails[1];
-        print(userID)
-        print("awaw")
         getAppliance = connection.cursor()
         getAppliance.execute("SELECT applianceStatus,applianceName,applianceOutputPin FROM tbl_appliances WHERE applianceName IS NOT NULL AND applianceID = %s",(applianceID,))
         applianceData = getAppliance.fetchall()
@@ -34,7 +33,7 @@ def turnON(applianceID,phoneNumber):
             applianceStatus = applianceDetail[0];
             applianceName = applianceDetail[1];
             applianceOutputPin = applianceDetail[2];
-            if(applianceStatus != 3):
+            if(applianceStatus != 2):
                 updateStatus = connection.cursor()
                 updateStatus.execute("UPDATE tbl_appliances SET applianceStatus = 1 WHERE applianceID = %s",(applianceID,))
                 connection.commit()
@@ -44,12 +43,15 @@ def turnON(applianceID,phoneNumber):
                 connection.commit()
                 insertLog.close()
                 subprocess.call(['python3', '/var/www/html/scripts/turnON.py', str(applianceOutputPin),])
+                message = "Port " +str(applianceID)+" - Turned on";
+                subprocess.call(['python', '/var/www/html/scripts/sendMessage.py', str(message),str(phoneNumber)])
+                time.sleep(1)
     deleteMessage()
         
 def turnOFF(applianceID,phoneNumber):
     global hasRead;
     hasRead = 1;
-
+    print(phoneNumber)
     dateTime = datetime.datetime.now()
     turnO = connection.cursor()
     turnO.execute("SELECT userType,userID FROM tbl_users WHERE userPhoneNumber = %s",(phoneNumber,))
@@ -58,25 +60,27 @@ def turnOFF(applianceID,phoneNumber):
     for userDetails in userTurnOFF:
         userType = userDetails[0];
         userID = userDetails[1];
-    
-    turnOApp = connection.cursor()
-    turnOApp.execute("SELECT applianceStatus,applianceName,applianceOutputPin FROM tbl_appliances WHERE applianceName IS NOT NULL AND applianceID = %s",(applianceID,))
-    turnOFFAppliance = turnOApp.fetchall()
-    turnOApp.close()
-    for applianceDetail in turnOFFAppliance:
-        applianceStatus = applianceDetail[0];
-        applianceName = applianceDetail[1];
-        applianceOutputPin = applianceDetail[2];
-        if(applianceStatus != 3):
-            updateStatus = connection.cursor()
-            updateStatus.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
-            connection.commit()
-            updateStatus.close()
-            insertLog = connection.cursor()
-            insertLog.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",(dateTime,applianceName,0,3,int(userID)))
-            connection.commit()
-            insertLog.close()
-            subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
+        turnOApp = connection.cursor()
+        turnOApp.execute("SELECT applianceStatus,applianceName,applianceOutputPin FROM tbl_appliances WHERE applianceName IS NOT NULL AND applianceID = %s",(applianceID,))
+        turnOFFAppliance = turnOApp.fetchall()
+        turnOApp.close()
+        for applianceDetail in turnOFFAppliance:
+            applianceStatus = applianceDetail[0];
+            applianceName = applianceDetail[1];
+            applianceOutputPin = applianceDetail[2];
+            if(applianceStatus != 2):
+                updateStatus = connection.cursor()
+                updateStatus.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
+                connection.commit()
+                updateStatus.close()
+                insertLog = connection.cursor()
+                insertLog.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",(dateTime,applianceName,0,3,int(userID)))
+                connection.commit()
+                insertLog.close()
+                subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
+                message = "Port " +str(applianceID)+" - Turned off";
+                subprocess.call(['python', '/var/www/html/scripts/sendMessage.py', str(message),str(phoneNumber)])
+                time.sleep(1)
     deleteMessage();
         
 def getStatus(phoneNumber):
@@ -100,16 +104,17 @@ def getStatus(phoneNumber):
         getStatusDAppliance = getApplianceDetails.fetchall()
         getApplianceDetails.close()
         for applianceDetais in getStatusDAppliance:
-            message += "Port "+str(applianceDetais[0])+": "+str(applianceDetais[1]) +" - Status : ";
+            message += "P-"+str(applianceDetais[0])+": "+str(applianceDetais[1]) +"-Status: ";
             if(applianceDetais[2] == 0):
-                status = "Turned Off\n"
+                status = "Off\n"
             elif(applianceDetais[2] == 1):
-                status = "Turned On\n"
+                status = "On\n"
             elif(applianceDetais[2] == 2):
                 status = "Disabled\n"
             message += status;   
         phoneNumber = "0" + phoneNumber;
         subprocess.call(['python', '/var/www/html/scripts/sendMessage.py', str(message),str(phoneNumber)])
+        time.sleep(1)
     deleteMessage();
         
 def getLogs(phoneNumber):        
@@ -145,23 +150,21 @@ def getLogs(phoneNumber):
 
 def deleteMessage():
     print("delete")
+    time.sleep(1)
     deleteMessage=serial.Serial('/dev/ttyAMA0',9600,timeout=1);
     deleteMessage.close()
     deleteMessage.open()
     #print line;
     deleteMessage.write('AT+CMGL="ALL"\r')
     response = deleteMessage.read(size=2000);
-    print(response)
-    #+CMGR: "REC UNREAD","+639956139395","","19/12/31,21:00:05+32"
-    #print response[24:34]; #get number of read message
-    #print response[26:36]; #get number of unread message
-    deleteMessage.write('AT+CMGD=1\r') #Delete message
+    deleteMessage.write('AT+CMGD=1,4\r') #Delete message
     deleteMessage.read()
     deleteMessage.close()
+    time.sleep(2)
 
 def connect():
     try:
-        urllib.request.urlopen('http://google.com') #Python 3.x
+        urllib2.urlopen('http://google.com') #Python 3.x
         return True
     except:
         return False    
@@ -170,14 +173,12 @@ while True:
     global hasRead;
     connection = mysql.connector.connect(host="localhost", user="abaynfriends", passwd="abaynfriends", database="homeautomation"
 )
-    print(hasRead)
     # Enable Serial Communication
     #GLOBE = 9163927131
     # Transmitting AT Commands to the Modem
     # '\r\n' indicates the Enter key
     if(hasRead == 1):
         hasRead = 0;
-            
     elif(hasRead == 0):
         if connect():
             #connected message
@@ -196,7 +197,7 @@ while True:
                 dcMessageSent = True;
                 print("discconnected");
                 notifMessage = "RPi is disconnected";
-                subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
+                subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])  
         getUnsent = connection.cursor()
         getUnsent.execute("SELECT notifID,notifMessage FROM tbl_unsentNotif")
         getUnsentNotif = getUnsent.fetchall()
@@ -210,7 +211,7 @@ while True:
             connection.commit()
             deleteUnsent.close()
             subprocess.call(['python', '/var/www/html/scripts/sendMessageToAll.py', str(notifMessage),])
-            
+            time.sleep(1)
         time.sleep(1)
         
         readMessage=serial.Serial('/dev/ttyAMA0',9600,timeout=1);
@@ -223,31 +224,43 @@ while True:
         #+CMGR: "REC UNREAD","+639956139395","","19/12/31,21:00:05+32"
         #print response[24:34]; #get number of read message
         #print response[26:36]; #get number of unread message
-        phoneNumber = response[26:36];
-        userType = None;
-        userID = None;
-        
-        if "TURN ON 1" in response:
-            turnON(1,phoneNumber);
-        if "TURN ON 2" in response:
-            turnON(2,phoneNumber);
-        if "TURN ON 3" in response:
-            turnON(3,phoneNumber);
-        if "TURN ON 4" in response:
-            turnON(4,phoneNumber);
-        if "TURN OFF 1" in response:
-            turnOFF(1,phoneNumber);
-        if "TURN OFF 2" in response:
-            turnOFF(2,phoneNumber);
-        if "TURN OFF 3" in response:
-            turnOFF(3,phoneNumber);
-        if "TURN OFF 4" in response:
-            turnOFF(4,phoneNumber);
-            
-        if "LOGS" in response:
-            getLogs(phoneNumber);
-            
-        if "STATUS" in response:
-            phoneNumber = phoneNumber;
-            getStatus(phoneNumber)
-        time.sleep(1)
+        if "REC UNREAD" in response:
+            x = re.findall('[0-9]+', response)
+            getLogsUser = connection.cursor()
+            getLogsUser.execute("SELECT userPhoneNumber FROM tbl_users")
+            getLogUserD = getLogsUser.fetchall()
+            getLogsUser.close()
+
+            for number in x:
+                for PN in getLogUserD:
+                    phoneNumber = PN[0];
+                    if phoneNumber in number:
+                        userType = None;
+                        userID = None;
+                        
+                        if "TURN ON 1" in response:
+                            turnON(1,phoneNumber);
+                        elif "TURN ON 2" in response:
+                            turnON(2,phoneNumber);
+                        elif "TURN ON 3" in response:
+                            turnON(3,phoneNumber);
+                        elif "TURN ON 4" in response:
+                            turnON(4,phoneNumber);
+                        elif "TURN OFF 1" in response:
+                            turnOFF(1,phoneNumber);
+                        elif "TURN OFF 2" in response:
+                            turnOFF(2,phoneNumber);
+                        elif "TURN OFF 3" in response:
+                            turnOFF(3,phoneNumber);
+                        elif "TURN OFF 4" in response:
+                            turnOFF(4,phoneNumber);
+                            
+                        elif "LOGS" in response:
+                            getLogs(phoneNumber);
+                            
+                        elif "STATUS" in response:
+                            phoneNumber = phoneNumber;
+                            getStatus(phoneNumber)
+        elif "REC READ" in response:
+            deleteMessage();
+    time.sleep(1) 

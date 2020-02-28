@@ -60,6 +60,7 @@ def saveReadings(current,voltage,applianceID):
     saveRead.close()    
     
 def saveLowNotification(wattage,applianceID,applianceName):
+    dateTime = datetime.datetime.now();
     setAbnormal = connection.cursor()
     setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 1 WHERE applianceID = %s",(applianceID,))
     connection.commit()

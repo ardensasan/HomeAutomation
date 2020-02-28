@@ -15,6 +15,7 @@ $date = date('Y-m-d H:i:s');
 $query = "INSERT INTO tbl_logs (logDateTime, logAppliance, logAction, logVia,logUser) VALUES (?,?,?,?,?)";
 $addLog = $conn->prepare($query);
 $addLog->execute([$date,$applianceName,$action,0,$userID]);
+$conn = null;
 //execute python script
 if($action == 1){
     exec("sudo python /var/www/html/scripts/turnON.py $applianceOutputPin");

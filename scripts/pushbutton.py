@@ -5,12 +5,6 @@ import datetime
 import time
 import RPi.GPIO as GPIO
 import mysql.connector
-connection = mysql.connector.connect(
-  host="localhost",
-  user="abaynfriends",
-  passwd="abaynfriends",
-  database="homeautomation"
-)
 from time import sleep
 
 GPIO.setmode(GPIO.BOARD)
@@ -31,6 +25,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(A4,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 def turnONOFF(channel):
+    connection = mysql.connector.connect(host="localhost", user="abaynfriends", passwd="abaynfriends", database="homeautomation")
     dateTime = datetime.datetime.now()
     applianceStatus = 3;
     applianceID = 0;
@@ -78,7 +73,7 @@ GPIO.add_event_detect(A3, GPIO.FALLING, callback=turnONOFF,bouncetime=1000)
 GPIO.add_event_detect(A4, GPIO.FALLING, callback=turnONOFF,bouncetime=1000)
 try:
     while True:
-        time.sleep(60) #you can put every value of sleep you want here..
+        time.sleep(1) #you can put every value of sleep you want here..
 
 except KeyboardInterrupt:  
     GPIO.cleanup()
