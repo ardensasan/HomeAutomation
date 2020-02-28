@@ -46,18 +46,18 @@ while($totalConsumption = $getTotalConsumption->fetch(PDO::FETCH_ASSOC))
         $dec += $totalConsumption['consDuration']*$totalConsumption['totalConsWatt'];
     }
 }
-array_push($result,(array('Month' => "January", 'KWh' => round($jan,2))));
-array_push($result,(array('Month' => "February", 'KWh' => round($feb,2))));
-array_push($result,(array('Month' => "March", 'KWh' => round($mar,2))));
-array_push($result,(array('Month' => "April", 'KWh' => round($apr,2))));
-array_push($result,(array('Month' => "May", 'KWh' => round($may,2))));
-array_push($result,(array('Month' => "June", 'KWh' => round($jun,2))));
-array_push($result,(array('Month' => "July", 'KWh' => round($jul,2))));
-array_push($result,(array('Month' => "August", 'KWh' => round($aug,2))));
-array_push($result,(array('Month' => "September", 'KWh' => round($sep,2))));
-array_push($result,(array('Month' => "October", 'KWh' => round($oct,2))));
-array_push($result,(array('Month' => "November", 'KWh' => round($nov,2))));
-array_push($result,(array('Month' => "December", 'KWh' => round($dec,2))));
+array_push($result,(array('y' => round($jan,2),'label' => "January")));
+array_push($result,(array('y' => round($feb,2), 'label' => "February")));
+array_push($result,(array('y' => round($mar,2),'label' => "March")));
+array_push($result,(array('y' => round($apr,2),'label' => "April")));
+array_push($result,(array('y' => round($may,2), 'label' => "May")));
+array_push($result,(array('y' => round($jun,2),'label' => "June")));
+array_push($result,(array('y' => round($jul,2), 'label' => "July")));
+array_push($result,(array('y' => round($aug,2),'label' => "August")));
+array_push($result,(array('y' => round($sep,2), 'label' => "September")));
+array_push($result,(array('y' => round($oct,2),'label' => "October")));
+array_push($result,(array('y' => round($nov,2), 'label' => "November")));
+array_push($result,(array('y' => round($dec,2), 'label' => "December")));
 $conn = null;
 echo json_encode($result);
 ?>

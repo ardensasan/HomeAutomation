@@ -35,7 +35,7 @@ $yearList = array();
             <h5 class="card-header"><center><span id="yearHeader">Year 2020</span></center></h5>
             <h5>Total Power Consumption for Year <b><span id="consumptionYear">2020</span></b> : <b><span id="totalConsumption">1000</span> KWh</b></h5>
             <div class="card-body">
-               <div id="totalConsGraph"></div>
+               <div id="chartContainer"></div>
             </div>
             <h5 class="card-header"><center>Month</center></h5>
           </div>
@@ -93,42 +93,8 @@ $yearList = array();
 <script>
 $( document ).ready(function() {
   changeConsYear();
-  // var year = document.getElementById("yearSelect").value;
-  //   $.ajax({
-  //       url: "queries/monthlyConsumption.php",
-  //       method: "POST",
-  //       data: {year:year},
-  //       dataType: 'JSON',
-  //       success: function(result){
-  //           totalConsGraph.setData(result);
-  //       }
-  //   })
-});
-var totalConsGraph = Morris.Bar({
-  element: 'totalConsGraph',
-  data: 
-   [ 
-     {Month: 'January',   KWh: 2}, 
-     {Month: 'February',  KWh: 2}, 
-     {Month: 'March',     KWh: 2}, 
-     {Month: 'April',     KWh: 2}, 
-     {Month: 'May',       KWh: 2}, 
-     {Month: 'June',      KWh: 2}, 
-     {Month: 'July',      KWh: 2}, 
-     {Month: 'August',    KWh: 2}, 
-     {Month: 'September', KWh: 2}, 
-     {Month: 'October',   KWh: 2}, 
-     {Month: 'November',  KWh: 2}, 
-     {Month: 'December',  KWh: 2}
-   ], 
-   xkey: 'Month', 
-   ykeys: ['KWh'], 
-   labels: ['KWh '], 
-   xLabelAngle: 50,
-   stacked: true 
 });
 </script>
-<script src="js/morris.js"></script>
-<link rel="stylesheet" href="css/morris.css">
+<script src="js/canvasjs.min.js"></script>
 </body>
 </html>

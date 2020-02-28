@@ -552,7 +552,25 @@ function monthlyConsumption(){
         data: {year:year},
         dataType: 'JSON',
         success: function(result){
-            totalConsGraph.setData(result);
+            var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light1", // "light1", "light2", "dark1", "dark2"
+            axisY: {
+              title: "KiloWatt Hours (KWh)"
+            },
+            axisX:{
+              interval: 1,
+            },
+            data: [{        
+              type: "column",  
+              showInLegend: true, 
+              legendMarkerColor: "white",
+              legendText: "Month",
+              indexLabel: "{y}",
+              dataPoints: result
+            }]
+          });
+          chart.render();
         }
     })
 }
