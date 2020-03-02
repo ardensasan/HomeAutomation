@@ -11,6 +11,7 @@ $getApplianceList=$conn->prepare($query);
 $getApplianceList->execute();
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
 {
+$controlLimit = "";
 $name = $applianceList['applianceName'];
 if($applianceList['applianceStatus'] == 0){
 $deviceStatus = '<td><h4><span class="badge badge-danger">Turned Off</span></h4></td>
@@ -46,7 +47,7 @@ $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td
 }
 }
 if($applianceList['applianceRating'] <= 0){
-  $powerConsumption = "Not Calibrated";
+  $powerConsumption = "Not Set";
 }else{
   $powerConsumption = $applianceList['applianceRating']." W";
 }
@@ -61,13 +62,24 @@ if($applianceList['applianceReadingStatus'] == 0){
     $readingStatus = '<h4><span class="badge badge-danger">Abnormal</span></h4>';
 }
 if($applianceList['applianceStatus'] != 1){
-  $calibrateStatus = "<td></td>";
+  $calibrateStatus = '<td><button class="btn" title="Fault Learning" disabled onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
 }else{
-  $calibrateStatus = '<td><button class="btn" title="Calibrate Appliance" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
+  $calibrateStatus = '<td><button class="btn" title="Fault Learning" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
+}
+if($applianceList['applianceUCL']  == NULL){
+  $controlLimit .= "<td>Not Set</td>";
+}else{
+  $controlLimit .= "<td>".$applianceList['applianceUCL']."</td>";
+}
+if($applianceList['applianceLCL']  == NULL){
+  $controlLimit .= "<td>Not Set</td>";
+}else{
+  $controlLimit .= "<td>".$applianceList['applianceLCL']."</td>";
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td><td><button class="btn" title="Edit Appliance" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-edit"></i></button></td>
 <td>'.$powerConsumption.'</td>'.$calibrateStatus.'
+'.$controlLimit.'
 <td>'.$readingStatus.'</td>
 '.$deviceStatus.'
 </td>

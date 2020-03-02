@@ -1,3 +1,10 @@
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+
+today = mm + '/' + dd + '/' + yyyy;
+
 //change icon class to active or hidden
 function changeIconState(page)
 {
@@ -117,12 +124,33 @@ function editScheduleDisplay(scheduleID)
         dataType: "JSON",
         data: {scheduleID: scheduleID},
         success: function(result){
-            alert(result)
-            if(result.scheduleRepeat == null){
-                alert("dog");
+            if(result.scheduleRepeat != ""){
+                document.getElementById("schedType").value = 2;
+                $("#scheduleDateDiv").hide();
+                $("#scheduleDateRepeat").show();
+                $.ajax({
+                    url: "queries/getRepeatDays.php",
+                    method: "POST",
+                    dataType: "JSON",
+                    data: {scheduleID: scheduleID},
+                    success: function(result){
+                        document.getElementById("dayM").checked =  result.dayM;
+                        document.getElementById("dayT").checked =  result.dayT;
+                        document.getElementById("dayW").checked =  result.dayW;
+                        document.getElementById("dayTh").checked =  result.dayTh;
+                        document.getElementById("dayF").checked =  result.dayF;
+                        document.getElementById("daySa").checked =  result.daySa;
+                        document.getElementById("daySun").checked =  result.daySun;
+                    }
+                })
+            }else{
+                $("#scheduleDateDiv").show();
+                $("#scheduleDateRepeat").hide();
             }
             if(result.scheduleDate != ""){
                 document.getElementById("scheduleDate").value = result.scheduleDate;
+            }else{
+                document.getElementById("scheduleDate").value = today;
             }
             document.getElementById("scheduleTime").value = result.scheduleTime;
             document.getElementById("applianceSelect").value = result.scheduleApplianceID;
@@ -215,6 +243,7 @@ function displaySchedForm(){
 //add schedule display
 function addScheduleDisplay(){
     $('#schedModal').modal('show');
+    document.getElementById("scheduleDate").value = today;
     document.getElementById("scheduleButton").innerHTML = '<button type="button" class="btn btn-primary" onclick="addSchedule()">Add</button><button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
 }
 //add schedule
@@ -281,7 +310,6 @@ function addSchedule()
 }
 
 function editSchedule(scheduleID){
-    alert("as")
     var scheduleRepeat = "";
     var schedType = document.getElementById("schedType").value;
     var scheduleDate = document.getElementById("scheduleDate").value;
@@ -335,8 +363,7 @@ function editSchedule(scheduleID){
             url: "queries/editSchedule.php",
             method: "POST",
             data: {scheduleID: scheduleID, scheduleDate: scheduleDate,scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction,scheduleRepeat:scheduleRepeat},
-            success: function(a){
-                alert(a)
+            success: function(){
                 location.reload();
             }
         })
@@ -383,11 +410,11 @@ function clearLogs()
 //display calibration modal
 function calibrateDisplay(applianceID,applianceName)
 {
-    document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calibrate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
+    document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Teach&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
     document.getElementById("calAppID").value = applianceID;
     document.getElementById("calAppName").value = applianceName;
     document.getElementById("calAppliance").innerHTML = applianceName;
-    document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
+    document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Teaching";
     $('#calibrateModal').modal('show');
 }
 
@@ -476,6 +503,17 @@ function calibrateCount()
         function(){ 
             count--;
             document.getElementById("calibrateCountdown").innerHTML = '<button class="btn btn-primary" disabled><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please Wait '+count+' seconds&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
+            $.ajax({
+                url: "queries/checkApplianceStatus.php",
+                method: "POST",
+                data: {applianceID:applianceID},
+                success: function(result){
+                    if(result == 0){
+                        document.getElementById("calMessage").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Port "+applianceID+" was turned off"
+                        clearInterval(countDown);
+                    }
+                }
+            })
             if(count == 0){
                 $.ajax({
                     url: "queries/setRating.php",
@@ -483,7 +521,15 @@ function calibrateCount()
                     data: {applianceID:applianceID},
                     dataType: 'JSON',
                     success: function(result){
-                        document.getElementById("calMessage").innerHTML = '&nbsp;&nbsp;Average Power: '+result.avg+' W<br>&nbsp;&nbsp;Upper Control Limit: '+result.UCL+' W<br>&nbsp;&nbsp;Lower Control Limit: '+result.LCL+' W';
+                        var LCLStatus = "";
+                        if(result.LCL < 0){
+                            LCLStatus = " LCL lower than zero will be ignored"
+                        }
+                        if(result.avg == null){
+                            document.getElementById("calMessage").innerHTML = "Error";
+                        }else{
+                            document.getElementById("calMessage").innerHTML = '&nbsp;&nbsp;Average Power: '+result.avg+' W<br>&nbsp;&nbsp;Upper Control Limit: '+result.UCL+' W<br>&nbsp;&nbsp;Lower Control Limit: '+result.LCL+' W'+LCLStatus;
+                        }
                     }
                 })
                 document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" data-dismiss ="modal" onclick="window.location.reload()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calibration Finished&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
@@ -692,8 +738,7 @@ function addAccount()
             url: "queries/addAccount.php",
             method: "POST",
             data: {firstName:firstName,lastName:lastName,userName:userName,PW1:PW1},
-            success: function(a){
-                alert(a)
+            success: function(){
                 location.reload();
             }
         })

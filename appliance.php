@@ -32,18 +32,25 @@ if($getApplianceList->rowCount() > 0){
 }?>
                             <table class="table table-bordered table-responsive-md table-striped text-center">
                                 <thead>
-                                    <col width="60">
+                                    <col width="20">
                                         <col width="200">
-                                            <col width="60">
-                                                <col width="90">
-                                                    <col width="60">
+                                            <col width="100">
+                                                <col width="100">
+                                                    <col width="20">
+                                                        <col width="20">
+                                                        <col width="20">
                                                         <col width="200">
+                                                        <col width="20">
                                                             <tr>
                                                                 <th class="text-center">Port
                                                                 </th>
                                                                 <th class="text-center" colspan="2">Appliance Name
                                                                 </th>
                                                                 <th colspan="2" class="text-center">Average Power
+                                                                </th>
+                                                                <th class="text-center">Upper Control Limit
+                                                                </th>
+                                                                <th class="text-center">Lower Control Limit
                                                                 </th>
                                                                 <th class="text-center">Reading
                                                                 </th>
@@ -65,6 +72,7 @@ $getApplianceList=$conn->prepare($query);
 $getApplianceList->execute();
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
 {
+$controlLimit = "";
 $name = $applianceList['applianceName'];
 if($applianceList['applianceStatus'] == 0){
 $deviceStatus = '<td><h4><span class="badge badge-danger">Turned Off</span></h4></td>
@@ -100,7 +108,7 @@ $deviceStatus = '<td><h4><span class="badge badge-dark">Disabled</span></h4></td
 }
 }
 if($applianceList['applianceRating'] <= 0){
-  $powerConsumption = "Not Calibrated";
+  $powerConsumption = "Not Set";
 }else{
   $powerConsumption = $applianceList['applianceRating']." W";
 }
@@ -115,13 +123,24 @@ if($applianceList['applianceReadingStatus'] == 0){
     $readingStatus = '<h4><span class="badge badge-danger">Abnormal</span></h4>';
 }
 if($applianceList['applianceStatus'] != 1){
-    $calibrateStatus = "<td></td>";
+    $calibrateStatus = '<td><button class="btn" title="Fault Learning" disabled onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
 }else{
-    $calibrateStatus = '<td><button class="btn" title="Calibrate Appliance" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
+    $calibrateStatus = '<td><button class="btn" title="Fault Learnings Appliance" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
+}
+if($applianceList['applianceUCL']  == NULL){
+    $controlLimit .= "<td>Not Set</td>";
+}else{
+    $controlLimit .= "<td>".$applianceList['applianceUCL']."</td>";
+}
+if($applianceList['applianceLCL']  == NULL){
+    $controlLimit .= "<td>Not Set</td>";
+}else{
+    $controlLimit .= "<td>".$applianceList['applianceLCL']."</td>";
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td><td><button class="btn" title="Edit Appliance" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-edit"></i></button></td>
 <td>'.$powerConsumption.'</td>'.$calibrateStatus.'
+'.$controlLimit.'
 <td>'.$readingStatus.'</td>
 '.$deviceStatus.'
 </td>
@@ -147,7 +166,7 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
 
                         </div>
                         <div class="modal-body">
-                            <p><span id="calMessage">Turn On Appliance Before Calibrating</span></p>
+                            <p><span id="calMessage">Turn On Appliance Before Teaching</span></p>
                             <div class="modal-body" id="calibrateCountdown">
                                 <button class="btn btn-primary" onclick="calibrateCount()"><span id="calText"></span></button>
                             </div>

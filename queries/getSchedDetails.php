@@ -12,7 +12,7 @@ while($scheduleDetails = $getScheduleDetails->fetch(PDO::FETCH_ASSOC)){
         $date = date("m/d/Y", strtotime($scheduleDetails['scheduleDate']));  
         $date = str_replace('-','/',$date);
     }else{
-        $date = "2020-10-10";
+        $date = "";
     }
     $schedDetails = array(
         "scheduleDate" => $date,
