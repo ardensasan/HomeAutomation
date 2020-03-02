@@ -16,11 +16,11 @@ $portName = "";
 <div class="dashboard-wrapper">
   <div class="container-fluid dashboard-content ">
   <?php
-  $query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NOT NULL AND `applianceStatus` != ?";
+  $query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NOT NULL";
   $getApplianceList=$conn->prepare($query);
-  $getApplianceList->execute([2]);
+  $getApplianceList->execute();
   if($getApplianceList->rowCount() == 0){
-    echo '     <div class="card">
+    echo '<div class="card">
     <div class="card-body">
         <center><h5>Ports Disabled</h5></center>
     </div>
@@ -35,7 +35,7 @@ $portName = "";
         echo '<a href="#" class="btn btn-outline-primary" id="portButton'.$applianceList['applianceID'].'" onclick="changeGraph('.$applianceList['applianceID'].')">Port '.$applianceList['applianceID'].'</a>';
       }     
       }   
-      echo '     <div class="card">
+      echo '<div class="card">
       <input type="hidden" id="portNumber" value="'.$portNumber.'">
       <input type="hidden" id="portName" value="'.$portName.'">
       <div class="card-body">
@@ -66,8 +66,12 @@ function refreshTable() {
   dataType: 'JSON',
   data: {applianceID: portNumber},
   success: function(result){
-    document.getElementById("portNumberReadings").innerHTML = " [ "+result.voltage+" V | "+result.current +"A ]";
-  }})
+    if(result.applianceStatus !=2){
+      document.getElementById("portNumberReadings").innerHTML = " [ "+result.voltage+" V | "+result.current +"A ]";
+    }else{
+      document.getElementById("portNumberReadings").innerHTML = " Disabled";
+    }
+   }})
   }})
 }
 </script>

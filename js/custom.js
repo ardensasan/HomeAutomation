@@ -106,6 +106,31 @@ function removeSched(scheduleID)
         }
     })
 }
+
+//remove schedule
+function editScheduleDisplay(scheduleID)
+{
+    $('#schedModal').modal('show');
+    $.ajax({
+        url: "queries/getSchedDetails.php",
+        method: "POST",
+        dataType: "JSON",
+        data: {scheduleID: scheduleID},
+        success: function(result){
+            alert(result)
+            if(result.scheduleRepeat == null){
+                alert("dog");
+            }
+            if(result.scheduleDate != ""){
+                document.getElementById("scheduleDate").value = result.scheduleDate;
+            }
+            document.getElementById("scheduleTime").value = result.scheduleTime;
+            document.getElementById("applianceSelect").value = result.scheduleApplianceID;
+            document.getElementById("scheduleAction").value = result.scheduleAction;
+            document.getElementById("scheduleButton").innerHTML = '<button type="button" class="btn btn-primary" onclick="editSchedule('+scheduleID+')">Confirm Edit</button><button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
+        }
+    })
+}
 //change warning message 
 function changeText(elementID,text)
 {
@@ -187,6 +212,11 @@ function displaySchedForm(){
         $("#scheduleDateRepeat").show();
     }
 }
+//add schedule display
+function addScheduleDisplay(){
+    $('#schedModal').modal('show');
+    document.getElementById("scheduleButton").innerHTML = '<button type="button" class="btn btn-primary" onclick="addSchedule()">Add</button><button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>';
+}
 //add schedule
 function addSchedule()
 {
@@ -250,6 +280,68 @@ function addSchedule()
     }
 }
 
+function editSchedule(scheduleID){
+    alert("as")
+    var scheduleRepeat = "";
+    var schedType = document.getElementById("schedType").value;
+    var scheduleDate = document.getElementById("scheduleDate").value;
+    var scheduleTime = document.getElementById("scheduleTime").value;
+    var scheduleApplianceID = document.getElementById("applianceSelect").value;
+    var scheduleAction =  document.getElementById("scheduleAction").value;
+    if(schedType == 1){
+        scheduleRepeat = null;
+    }else{
+        scheduleDate = null;
+        if(document.getElementById("dayM").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayT").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayW").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayTh").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("dayF").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("daySa").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+        if(document.getElementById("daySun").checked){
+            scheduleRepeat +=  "1";
+        }else{
+            scheduleRepeat +=  "0";
+        }
+    }
+    if(scheduleRepeat == "0000000"){
+        alert("Please choose a day to repeat");
+    }else{
+        $.ajax({
+            url: "queries/editSchedule.php",
+            method: "POST",
+            data: {scheduleID: scheduleID, scheduleDate: scheduleDate,scheduleTime: scheduleTime,scheduleApplianceID:scheduleApplianceID,scheduleAction:scheduleAction,scheduleRepeat:scheduleRepeat},
+            success: function(a){
+                alert(a)
+                location.reload();
+            }
+        })
+    }
+}
 //check use login credentials
 function getReadings()
 {
