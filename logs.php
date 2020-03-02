@@ -9,7 +9,7 @@ include_once "navigator.php";
         <div class="container-fluid dashboard-content ">
             <div class="card">
                 <div class="card-body">
-                <table id="datable" class="table table-striped table-bordered">
+                <table id="datable" class="table table-bordered table-responsive-md table-striped text-center">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Log</th>

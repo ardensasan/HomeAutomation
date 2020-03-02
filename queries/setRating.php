@@ -27,9 +27,6 @@ if($avgWatt > 0){
     $stdDev =  (float)sqrt($variance/$num_of_elements);
     $UCL = $avgWatt + $stdDev*6;
     $LCL = $avgWatt - $stdDev*6;
-    if($UCL <=0){
-        $UCL = 1;
-    }
     $query = "UPDATE `tbl_appliances` SET `applianceUCL` = ?, `applianceLCL` = ? WHERE `applianceID` = ?";
     $setApplianceRating = $conn->prepare($query);
     $setApplianceRating->execute([$UCL,$LCL,$applianceID]);

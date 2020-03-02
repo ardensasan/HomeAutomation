@@ -10,7 +10,7 @@ include_once "navigator.php";
             <div class="card">
                 <div class="card-body">
                 <h5 class="card-header">Recent Actions</h5>
-                <table id="datable" class="table table-striped table-bordered">
+                <table id="datable" class="table table-bordered table-responsive-md table-striped text-center">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Date</th>

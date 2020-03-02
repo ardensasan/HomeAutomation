@@ -53,7 +53,7 @@ while True:
                     connection.commit() 
                     schedulerAction.close()
                     subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
-                if scheduleAction == 1:
+                elif scheduleAction == 1:
                     schedulerAction = connection.cursor()
                     schedulerAction.execute("UPDATE tbl_appliances SET applianceStatus = 1 WHERE applianceID = %s",(applianceID,))
                     connection.commit()
@@ -75,7 +75,7 @@ while True:
             for day in scheduleRepeat:
                 count = count + 1;
                 if day == "1":
-                    if count == dayToday and scheduleTime == timeToday:
+                    if count == dayToday and scheduleTime == timeToday and isExecuted == 0:
                         if isExecuted == 0:
                             schedulerAction = connection.cursor()
                             schedulerAction.execute("UPDATE tbl_schedules SET isExecuted = 1 WHERE scheduleID = %s",(scheduleID,))
@@ -91,7 +91,7 @@ while True:
                                 connection.commit() 
                                 schedulerAction.close()
                                 subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
-                            if scheduleAction == 1:
+                            elif scheduleAction == 1:
                                 schedulerAction = connection.cursor()
                                 schedulerAction.execute("UPDATE tbl_appliances SET applianceStatus = 1 WHERE applianceID = %s",(applianceID,))
                                 connection.commit()

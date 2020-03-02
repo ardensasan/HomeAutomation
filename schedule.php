@@ -9,7 +9,10 @@
 <body>
 <?php 
 include_once "navigator.php";
-date_default_timezone_set("Asia/Manila");
+$month = date('m');
+$day = date('d');
+$year = date('Y');
+$date = $month . "/" . $day . "/" . $year;
 $currentPage = basename($_SERVER['PHP_SELF']);
 $hasRecord = "";
 ?>
@@ -20,7 +23,7 @@ $hasRecord = "";
 <div class="card-body">
 <table class="table table-bordered table-responsive-md table-striped text-center">
 <span class="table-add float-left mb-3 mr-2">
-                    <a data-toggle="modal" href="" onclick="addScheduleDisplay()" class="text-success">
+                    <a data-toggle="modal" href="#schedModal" class="text-success">
                       <i
                          class="fas fa-plus" aria-hidden="true">
                       </i>
@@ -98,12 +101,8 @@ $repeat .= " Sun ";
         <td>'.$repeat.'</td>
         <td>
         <span class="table-remove"><button type="button"
-        class="btn btn-primary btn-rounded btn-sm my-0"
-        onclick="editScheduleDisplay(\''.$applianceSchedule['scheduleID'].'\')">Edit</button></span>
-        <span class="table-remove"><button type="button"
         class="btn btn-danger btn-rounded btn-sm my-0"
         onclick="removeSched(\''.$applianceSchedule['scheduleID'].'\')">Remove</button></span></td>';
-        
 }
 ?>
 </tbody>
@@ -136,7 +135,7 @@ $repeat .= " Sun ";
         <!-- set schedule end -->
         <!-- set date -->
         <div class="form-group" id="scheduleDateDiv">
-          <label>Date</label>
+        <label>Date</label>
               <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
                 <input type="text" onkeydown="return false" value ="<?php echo date("m/d/y");?>" id="scheduleDate" class="form-control datetimepicker-input" data-target="#datetimepicker4" data-toggle="datetimepicker"/>
                 <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
@@ -150,9 +149,9 @@ $repeat .= " Sun ";
             <!-- set date -->
             <!-- set time -->
             <label>Time</label>
-            <div class="form-group" id="scheduleTimeDiv">
+            <div class="form-group">
               <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
-                <input type="text" onkeydown="return false" value ="<?php echo date("h:i:sa");?>" id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker3" data-toggle="datetimepicker"/>
+                <input type="text" onkeydown="return false" value ="<?php echo $date;?>" id="scheduleTime" class="form-control datetimepicker-input" data-target="#datetimepicker3" data-toggle="datetimepicker"/>
                 <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
                   <div class="input-group-text">
                     <i class="far fa-clock">
@@ -240,13 +239,11 @@ echo '<option value ="'.$applianceList['applianceID'].'">'.$applianceList['appli
       <!-- Modal footer -->
       <div class="modal-footer">
       <?php if($getApplianceList->rowCount() == 0){
-  echo '<div  id="scheduleButton"><button type="button" disabled class="btn btn-primary" onclick="addSchedule()">Add Schedule</button>
-  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button><div>';
+  echo '<button type="button" disabled class="btn btn-primary" onclick="addSchedule()">Add Schedule</button>';
 }else{
-    echo '<div  id="scheduleButton"><button type="button"class="btn btn-primary" onclick="addSchedule()">Add Schedule</button>
-    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button><div>';
+    echo '<button type="button" class="btn btn-primary" onclick="addSchedule()">Add Schedule</button>';
 }?>
-
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
