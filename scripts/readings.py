@@ -62,7 +62,7 @@ def saveReadings(current,voltage,applianceID):
 def saveLowNotification(wattage,applianceID,applianceName):
     dateTime = datetime.datetime.now();
     setAbnormal = connection.cursor()
-    setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 1 WHERE applianceID = %s",(applianceID,))
+    setAbnormal.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
     connection.commit()
     setAbnormal.close()
     
@@ -94,7 +94,7 @@ def saveLowNotification(wattage,applianceID,applianceName):
 def saveHighNotification(wattage,applianceID,applianceName):
     dateTime = datetime.datetime.now();
     setAbnormal = connection.cursor()
-    setAbnormal.execute("UPDATE tbl_appliances SET applianceReadingStatus = 1 WHERE applianceID = %s",(applianceID,))
+    setAbnormal.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
     connection.commit()
     setAbnormal.close()
     

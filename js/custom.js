@@ -509,7 +509,7 @@ function calibrateCount()
                 data: {applianceID:applianceID},
                 success: function(result){
                     if(result == 0){
-                        document.getElementById("calMessage").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Port "+applianceID+" was turned off"
+                        document.getElementById("calMessage").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;Port "+applianceID+" was turned off. Please try again"
                         clearInterval(countDown);
                     }
                 }
@@ -526,7 +526,7 @@ function calibrateCount()
                             LCLStatus = " LCL lower than zero will be ignored"
                         }
                         if(result.avg == null){
-                            document.getElementById("calMessage").innerHTML = "Error";
+                            document.getElementById("calMessage").innerHTML = "There was an error encountered. Please try again";
                         }else{
                             document.getElementById("calMessage").innerHTML = '&nbsp;&nbsp;Average Power: '+result.avg+' W<br>&nbsp;&nbsp;Upper Control Limit: '+result.UCL+' W<br>&nbsp;&nbsp;Lower Control Limit: '+result.LCL+' W'+LCLStatus;
                         }

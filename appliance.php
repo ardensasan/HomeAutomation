@@ -39,8 +39,8 @@ if($getApplianceList->rowCount() > 0){
                                                     <col width="20">
                                                         <col width="20">
                                                         <col width="20">
-                                                        <col width="200">
                                                         <col width="20">
+                                                        <col width="200">
                                                             <tr>
                                                                 <th class="text-center">Port
                                                                 </th>
@@ -51,8 +51,6 @@ if($getApplianceList->rowCount() > 0){
                                                                 <th class="text-center">Upper Control Limit
                                                                 </th>
                                                                 <th class="text-center">Lower Control Limit
-                                                                </th>
-                                                                <th class="text-center">Reading
                                                                 </th>
                                                                 <th class="text-center">Status
                                                                 </th>
@@ -117,11 +115,6 @@ if($userType == ADMIN){
     <a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].',\''.$applianceList['applianceOutputPin'].'\')"href="#" class="text-danger">
     <i class="fas fa-minus" aria-hidden="true"></i>';
 }
-if($applianceList['applianceReadingStatus'] == 0){
-    $readingStatus = '<h4><span class="badge badge-success">Normal</span></h4>';
-}else{
-    $readingStatus = '<h4><span class="badge badge-danger">Abnormal</span></h4>';
-}
 if($applianceList['applianceStatus'] != 1){
     $calibrateStatus = '<td><button class="btn" title="Fault Learning" disabled onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
 }else{
@@ -141,7 +134,6 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td><td><button class="btn" title="Edit Appliance" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-edit"></i></button></td>
 <td>'.$powerConsumption.'</td>'.$calibrateStatus.'
 '.$controlLimit.'
-<td>'.$readingStatus.'</td>
 '.$deviceStatus.'
 </td>
 </tr>';
@@ -166,7 +158,7 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
 
                         </div>
                         <div class="modal-body">
-                            <p><span id="calMessage">Turn On Appliance Before Teaching</span></p>
+                            <p><span id="calMessage">Dont Turn Off Appliance While Teaching</span></p>
                             <div class="modal-body" id="calibrateCountdown">
                                 <button class="btn btn-primary" onclick="calibrateCount()"><span id="calText"></span></button>
                             </div>

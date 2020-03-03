@@ -56,11 +56,6 @@ if($userType == 0){
     <a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].',\''.$applianceList['applianceOutputPin'].'\')"href="#" class="text-danger">
     <i class="fas fa-minus" aria-hidden="true"></i>';
 }
-if($applianceList['applianceReadingStatus'] == 0){
-    $readingStatus = '<h4><span class="badge badge-success">Normal</span></h4>';
-}else{
-    $readingStatus = '<h4><span class="badge badge-danger">Abnormal</span></h4>';
-}
 if($applianceList['applianceStatus'] != 1){
   $calibrateStatus = '<td><button class="btn" title="Fault Learning" disabled onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
 }else{
@@ -80,7 +75,6 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td><td><button class="btn" title="Edit Appliance" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-edit"></i></button></td>
 <td>'.$powerConsumption.'</td>'.$calibrateStatus.'
 '.$controlLimit.'
-<td>'.$readingStatus.'</td>
 '.$deviceStatus.'
 </td>
 </tr>';
