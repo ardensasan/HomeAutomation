@@ -54,6 +54,9 @@ include_once "navigator.php";
                                         } elseif ($applianceName['logVia'] == 3) {
                                             $action2 = "SMS";
                                             $exec = $applianceName['FullName'];
+                                        }elseif ($applianceName['logVia'] == 4) {
+                                            $action2 = "Forced";
+                                            $exec = "NA";
                                         }
                                         echo '<td class="text-center">'. $applianceName['D'].'</td>
                                         <td class="text-center">'. $applianceName['T'].'</td>

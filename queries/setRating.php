@@ -34,8 +34,8 @@ if($avgWatt > 0){
     $readings = array(
         "avg" => round($avgWatt,2),
         "stdDev" => round($stdDev,2),
-        "UCL" => round($UCL,2),
-        "LCL" => round($LCL,2)
+        "UCL" => round($UCL,4),
+        "LCL" => round($LCL,4)
     );
 }else{
     $readings = array(

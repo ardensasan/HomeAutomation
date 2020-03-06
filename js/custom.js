@@ -433,7 +433,6 @@ function editApplianceDisplay(applianceID,applianceName)
     })
     document.getElementById("editAppID").value = applianceID;
     document.getElementById("editedApplianceName").value = applianceName;
-    document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
     $('#editApplianceModal').modal('show');
 }
 
@@ -528,27 +527,17 @@ function calibrateCount()
                         if(result.avg == null){
                             document.getElementById("calMessage").innerHTML = "There was an error encountered. Please try again";
                         }else{
-                            document.getElementById("calMessage").innerHTML = '&nbsp;&nbsp;Average Power: '+result.avg+' W<br>&nbsp;&nbsp;Upper Control Limit: '+result.UCL+' W<br>&nbsp;&nbsp;Lower Control Limit: '+result.LCL+' W'+LCLStatus;
+                            document.getElementById("calMessage").innerHTML = '&nbsp;&nbsp;Average Power: '+result.avg+' W<br>&nbsp;&nbsp;Upper Control Limit: '+result.UCL+' W<br>&nbsp;&nbsp;Lower Control Limit: '+result.LCL+' W<br>'+LCLStatus;
                         }
                     }
                 })
-                document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" data-dismiss ="modal" onclick="window.location.reload()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calibration Finished&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
+                document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" data-dismiss ="modal" onclick="window.location.reload()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finished&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
                 clearInterval(countDown);
             }
         }, 
     1000);   
 }
 
-//display calibration modal
-function scheduleDisplayModal(applianceID,applianceName)
-{
-    document.getElementById("calibrateCountdown").innerHTML = '<button type="button" class="btn btn-primary" onclick="calibrateCount()"><span id="calText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calibrate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button>';
-    document.getElementById("calAppID").value = applianceID;
-    document.getElementById("calAppName").value = applianceName;
-    document.getElementById("calAppliance").innerHTML = applianceName;
-    document.getElementById("calMessage").innerHTML = "Turn On Appliance Before Calibrating";
-    $('#calibrateModal').modal('show')
-}
 
 //refresh appliance page
 function refreshAppliancePage(){

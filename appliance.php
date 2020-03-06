@@ -33,13 +33,13 @@ if($getApplianceList->rowCount() > 0){
                             <table class="table table-bordered table-responsive-md table-striped text-center">
                                 <thead>
                                     <col width="20">
-                                        <col width="200">
+                                        <col width="300">
                                             <col width="100">
                                                 <col width="100">
-                                                    <col width="20">
-                                                        <col width="20">
-                                                        <col width="20">
-                                                        <col width="20">
+                                                    <col width="50">
+                                                        <col width="100">
+                                                        <col width="100">
+                                                        <col width="150">
                                                         <col width="200">
                                                             <tr>
                                                                 <th class="text-center">Port
@@ -65,7 +65,7 @@ if($getApplianceList->rowCount() > 0){
                                 <tbody id="applianceDisplay">
                                 <?php 
 $count = 1;
-$query = "SELECT * FROM `tbl_appliances` WHERE `applianceName` IS NOT NULL";
+$query = "SELECT tbl_appliances.applianceID,tbl_appliances.applianceName,tbl_appliances.applianceRating,tbl_appliances.applianceStatus, tbl_appliances.applianceOutputPin,tbl_appliances.applianceUCL,tbl_readings.rDateTime,tbl_appliances.applianceLCL,(tbl_readings.rCurrent*tbl_readings.rVoltage) as Watt FROM tbl_appliances INNER JOIN tbl_readings ON tbl_appliances.applianceID=tbl_readings.applianceID WHERE tbl_readings.rDateTime = ( SELECT MAX(rDateTime) FROM tbl_readings WHERE tbl_readings.applianceID = tbl_appliances.applianceID ) GROUP BY tbl_appliances.applianceID";
 $getApplianceList=$conn->prepare($query);
 $getApplianceList->execute();
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
@@ -115,20 +115,20 @@ if($userType == ADMIN){
     <a data-toggle="modal" onclick="removeAppliance('.$applianceList['applianceID'].',\''.$applianceList['applianceOutputPin'].'\')"href="#" class="text-danger">
     <i class="fas fa-minus" aria-hidden="true"></i>';
 }
-if($applianceList['applianceStatus'] != 1){
-    $calibrateStatus = '<td><button class="btn" title="Fault Learning" disabled onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
+if($applianceList['applianceStatus'] = 1 and $applianceList['Watt'] > 0){
+  $calibrateStatus = '<td><button class="btn" title="Fault Learning" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
 }else{
-    $calibrateStatus = '<td><button class="btn" title="Fault Learnings Appliance" onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
+  $calibrateStatus = '<td><button class="btn" title="Fault Learning" disabled onclick="calibrateDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-cogs"></i></button></td>';
 }
 if($applianceList['applianceUCL']  == NULL){
     $controlLimit .= "<td>Not Set</td>";
 }else{
-    $controlLimit .= "<td>".$applianceList['applianceUCL']."</td>";
+    $controlLimit .= "<td>".$applianceList['applianceUCL']." W</td>";
 }
 if($applianceList['applianceLCL']  == NULL){
     $controlLimit .= "<td>Not Set</td>";
 }else{
-    $controlLimit .= "<td>".$applianceList['applianceLCL']."</td>";
+    $controlLimit .= "<td>".$applianceList['applianceLCL']." W</td>";
 }
 echo '<tr><td>'.$applianceList['applianceID'].'</td>
 <td>'.$applianceList['applianceName'].'</td><td><button class="btn" title="Edit Appliance" onclick="editApplianceDisplay('.$applianceList['applianceID'].',\''.$applianceList['applianceName'].'\')"><i class="fas fa-edit"></i></button></td>
@@ -153,7 +153,7 @@ echo '<tr><td>'.$applianceList['applianceID'].'</td>
                     <input type="hidden" value="" id="calAppName">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4>Calibrate <span id="calAppliance"></span></h4>
+                            <h4>Teach <span id="calAppliance"></span></h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                         </div>

@@ -61,12 +61,26 @@ def saveReadings(current,voltage,applianceID):
     
 def saveLowNotification(wattage,applianceID,applianceName):
     dateTime = datetime.datetime.now();
-    setAbnormal = connection.cursor()
-    setAbnormal.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
+    turnOFFAppliance = connection.cursor()
+    turnOFFAppliance.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
     connection.commit()
-    setAbnormal.close()
+    turnOFFAppliance.close()
     
-    notifMessage = "Abnormal low watt readings on Port "+str(applianceID)+" "+str(applianceName);
+    turnONOFFAppliance = connection.cursor()
+    turnONOFFAppliance.execute("SELECT applianceOutputPin FROM tbl_appliances WHERE applianceID = %s",(applianceID,))
+    turnONOFFDAppliance = turnONOFFAppliance.fetchall()
+    turnONOFFAppliance.close()
+    for turnONOFFDetails in turnONOFFDAppliance:
+            applianceOutputPin = turnONOFFDetails[0];
+            subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
+            
+    FTurnOff = connection.cursor()
+    FTurnOff.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",
+                   (dateTime, applianceName, 0, 4, 1))
+    connection.commit()
+    FTurnOff.close()
+
+    notifMessage = "Abnormal low watt readings on Port "+str(applianceID)+" "+str(applianceName)+" Please check your appliance";
     notifText = str(wattage)+" W lower than acceptable levels";
     saveLow = connection.cursor()
     saveLow.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
@@ -97,8 +111,22 @@ def saveHighNotification(wattage,applianceID,applianceName):
     setAbnormal.execute("UPDATE tbl_appliances SET applianceStatus = 0 WHERE applianceID = %s",(applianceID,))
     connection.commit()
     setAbnormal.close()
-    
-    notifMessage = "Abnormal high watt readings on Port "+str(applianceID)+" "+str(applianceName);
+
+    turnONOFFAppliance = connection.cursor()
+    turnONOFFAppliance.execute("SELECT applianceOutputPin FROM tbl_appliances WHERE applianceID = %s",(applianceID,))
+    turnONOFFDAppliance = turnONOFFAppliance.fetchall()
+    turnONOFFAppliance.close()
+    for turnONOFFDetails in turnONOFFDAppliance:
+            applianceOutputPin = turnONOFFDetails[0];
+            subprocess.call(['python3', '/var/www/html/scripts/turnOFF.py', str(applianceOutputPin),])
+            
+    FTurnOff = connection.cursor()
+    FTurnOff.execute("INSERT INTO tbl_logs(logDateTime,logAppliance,logAction,logVia,logUser) VALUES (%s,%s,%s,%s,%s)",
+                   (dateTime, applianceName, 0, 4, 1))
+    connection.commit()
+    FTurnOff.close()
+
+    notifMessage = "Abnormal high watt readings on Port "+str(applianceID)+" "+str(applianceName)+" Please check your appliance";
     notifText = str(wattage)+" W lower than acceptable levels";
     saveHigh = connection.cursor()
     saveHigh.execute("INSERT INTO tbl_notifications(notifMessage,notifText,notifDateTime) VALUES (%s,%s,%s)",(notifMessage,notifText,dateTime))
