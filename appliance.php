@@ -65,7 +65,7 @@ if($getApplianceList->rowCount() > 0){
                                 <tbody id="applianceDisplay">
                                 <?php 
 $count = 1;
-$query = "SELECT tbl_appliances.applianceID,tbl_appliances.applianceName,tbl_appliances.applianceRating,tbl_appliances.applianceStatus, tbl_appliances.applianceOutputPin,tbl_appliances.applianceUCL,tbl_readings.rDateTime,tbl_appliances.applianceLCL,(tbl_readings.rCurrent*tbl_readings.rVoltage) as Watt FROM tbl_appliances INNER JOIN tbl_readings ON tbl_appliances.applianceID=tbl_readings.applianceID WHERE tbl_readings.rDateTime = ( SELECT MAX(rDateTime) FROM tbl_readings WHERE tbl_readings.applianceID = tbl_appliances.applianceID)";
+$query = "SELECT tbl_appliances.applianceID,tbl_appliances.applianceName,tbl_appliances.applianceRating,tbl_appliances.applianceStatus, tbl_appliances.applianceOutputPin,tbl_appliances.applianceUCL,tbl_readings.rDateTime,tbl_appliances.applianceLCL,(tbl_readings.rCurrent*tbl_readings.rVoltage) as Watt FROM tbl_appliances INNER JOIN tbl_readings ON tbl_appliances.applianceID=tbl_readings.applianceID WHERE tbl_readings.rDateTime = ( SELECT MAX(rDateTime) FROM tbl_readings WHERE tbl_readings.applianceID = tbl_appliances.applianceID) AND tbl_appliances.applianceName IS NOT NULL";
 $getApplianceList=$conn->prepare($query);
 $getApplianceList->execute();
 while($applianceList = $getApplianceList->fetch(PDO::FETCH_ASSOC))
