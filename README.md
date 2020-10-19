@@ -1,4 +1,4 @@
 # HomeAutomation
 home automation project 
 
-PHP
+HTML PHP Javascript
