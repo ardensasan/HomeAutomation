@@ -9,14 +9,14 @@ Written in pure php and javascript
  
 # MySQL
   
-  mysql configs are in databaseConnection.php
+  mysql configs are in #databaseConnection.php
   
-  SQL Backup in homeautomation.sql
+  SQL Backup in #homeautomation.sql
  
  Defaults
  
- database name: homeautomation
+ database name: #homeautomation
  
- database username: abaynfriends
+ database username: #abaynfriends
 
- database password: abaynfriends
+ database password: #abaynfriends
