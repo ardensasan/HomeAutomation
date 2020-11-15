@@ -3,5 +3,5 @@ HTML PHP Javascript
 
 HomaAutomation Website Source Code
 
-Webpage is hosted on http://abaynfriends.ddnsfree.com
+Webpage is hosted on http://abayhome.ddnsfree.com
   
